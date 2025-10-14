@@ -87,20 +87,6 @@ Interactive API documentation is available when the server is running:
 - **Swagger UI**: `http://localhost:3000/api`
 - **OpenAPI JSON**: `http://localhost:3000/api-json`
 
-### Core Endpoints
-
-| Method   | Endpoint           | Description          |
-| -------- | ------------------ | -------------------- |
-| `POST`   | `/auth/register`   | Register new user    |
-| `POST`   | `/auth/login`      | User authentication  |
-| `GET`    | `/decks`           | List user's decks    |
-| `POST`   | `/decks`           | Create new deck      |
-| `PUT`    | `/decks/:id`       | Update deck          |
-| `DELETE` | `/decks/:id`       | Delete deck          |
-| `POST`   | `/cards`           | Create new card      |
-| `PUT`    | `/cards/:id`       | Update card          |
-| `GET`    | `/history/:deckId` | Get learning history |
-
 ## 🧪 Testing
 
 We maintain high test coverage with both unit and integration tests:

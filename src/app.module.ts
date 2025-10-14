@@ -4,6 +4,7 @@ import { cards_module } from '@/modules/cards/cards_module';
 import { decks_module } from '@/modules/decks/decks_module';
 import { sessions_module } from '@/modules/sessions/sessions_module';
 import { history_module } from '@/modules/history/history_module';
+import { health_module } from '@/modules/health/health_module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { get_database_config } from '@/config/get_database_config';
@@ -43,6 +44,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ...decks_module.controllers,
     ...history_module.controllers,
     ...sessions_module.controllers,
+    ...health_module.controllers,
   ],
   providers: [
     ...authentication_module.repositories,
