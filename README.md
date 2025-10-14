@@ -144,28 +144,6 @@ This project uses:
 
 Pre-commit hooks ensure code quality. Run `yarn lint` and `yarn format` before committing.
 
-## 🚢 Deployment
-
-### Docker
-
-Build and run with Docker:
-
-```bash
-# Build image
-docker build -t tinycardo-api .
-
-# Run container
-docker run -p 3000:3000 --env-file .env tinycardo-api
-```
-
-### Docker Compose
-
-For local development with PostgreSQL:
-
-```bash
-docker-compose up -d
-```
-
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
