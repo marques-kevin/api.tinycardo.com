@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/marques-kevin/api.tinycardo.com/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: Security Issues
+    url: https://github.com/marques-kevin/api.tinycardo.com/security/policy
+    about: Please report security vulnerabilities privately

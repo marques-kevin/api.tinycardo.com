@@ -1,0 +1,181 @@
+name: Tests and checks
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.17.1'
+          cache: 'yarn'
+
+      - name: Get yarn.lock hash
+        id: yarn-lock-hash
+        run: echo "hash=$(sha256sum yarn.lock | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        id: yarn-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ steps.yarn-lock-hash.outputs.hash }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+  unit-tests:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.17.1'
+          cache: 'yarn'
+
+      - name: Get yarn.lock hash
+        id: yarn-lock-hash
+        run: echo "hash=$(sha256sum yarn.lock | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ steps.yarn-lock-hash.outputs.hash }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Run unit tests
+        run: yarn test:unit
+
+  lint:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.17.1'
+          cache: 'yarn'
+
+      - name: Get yarn.lock hash
+        id: yarn-lock-hash
+        run: echo "hash=$(sha256sum yarn.lock | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ steps.yarn-lock-hash.outputs.hash }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Run linter
+        run: yarn lint
+
+  build:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.17.1'
+          cache: 'yarn'
+
+      - name: Get yarn.lock hash
+        id: yarn-lock-hash
+        run: echo "hash=$(sha256sum yarn.lock | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ steps.yarn-lock-hash.outputs.hash }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Run build
+        run: yarn build
+
+  integration-tests:
+    needs: install
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.17.1'
+          cache: 'yarn'
+
+      - name: Get yarn.lock hash
+        id: yarn-lock-hash
+        run: echo "hash=$(sha256sum yarn.lock | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ steps.yarn-lock-hash.outputs.hash }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Run database migrations
+        run: yarn migrate:test
+        env:
+          NODE_ENV: test
+
+      - name: Run integration tests
+        run: yarn test:int
+        env:
+          NODE_ENV: test
