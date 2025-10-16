@@ -3,8 +3,8 @@ import { HistoryController } from '@/modules/history/controllers/history_control
 import { HistoryRepository } from '@/modules/history/repositories/history_repository';
 import { HistoryRepositoryPostgres } from '@/modules/history/repositories/history_repository_postgres';
 import { HistoryRepositoryInMemory } from '@/modules/history/repositories/history_repository_in_memory';
-import { HistoryReviewCardHandler } from '@/modules/history/handlers/history_review_card_handler';
-import { HistoryGetDeckHistoryHandler } from '@/modules/history/handlers/history_get_deck_history_handler';
+import { HistoryReviewCardHandler } from '@/modules/history/handlers/history_review_card_handler/history_review_card_handler';
+import { HistoryGetDeckHistoryHandler } from '@/modules/history/handlers/history_get_deck_history_handler/history_get_deck_history_handler';
 
 export const history_module = {
   entities: [HistoryEntity],

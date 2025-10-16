@@ -1,13 +1,13 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthenticationAuthenticateWithGoogleHandler } from '@/modules/authentication/handlers/authentication_authenticate_with_google_handler';
-import { AuthenticationDeleteAccountHandler } from '@/modules/authentication/handlers/authentication_delete_account_handler';
-import { AuthenticationGetGoogleAuthenticationUrlHandler } from '@/modules/authentication/handlers/authentication_get_google_authentication_url';
+import { AuthenticationAuthenticateWithGoogleHandler } from '@/modules/authentication/handlers/authentication_authenticate_with_google_handler/authentication_authenticate_with_google_handler';
+import { AuthenticationDeleteAccountHandler } from '@/modules/authentication/handlers/authentication_delete_account_handler/authentication_delete_account_handler';
+import { AuthenticationGetGoogleAuthenticationUrlHandler } from '@/modules/authentication/handlers/authentication_get_google_authentication_url/authentication_get_google_authentication_url';
 import { UsersEntity } from '@/modules/authentication/entities/users_entity';
 import { User } from '@/modules/authentication/decorators/user_decorator';
 import { JwtAuthGuard } from '@/modules/authentication/guards/jwt.guard';
-import { GetGoogleAuthenticationUrlDto } from '@/modules/authentication/dtos/get_google_authentication_url.dto';
-import { AuthenticateWithGoogleCodeDto } from '@/modules/authentication/dtos/authenticate_with_google_code.dto';
+import { AuthenticationGetGoogleAuthenticationUrlDto } from '@/modules/authentication/dtos/authentication_get_google_authentication_url_dto';
+import { AuthenticationAuthenticateWithGoogleCodeDto } from '@/modules/authentication/dtos/authentication_authenticate_with_google_code_dto';
 
 @ApiTags('Authentication')
 @Controller('/authentication')
@@ -20,7 +20,9 @@ export class AuthenticationController {
 
   @ApiOperation({ summary: 'Get Google OAuth authentication URL' })
   @Post('/get_google_authentication_url')
-  getGoogleAuthenticationUrl(@Body() body: GetGoogleAuthenticationUrlDto) {
+  getGoogleAuthenticationUrl(
+    @Body() body: AuthenticationGetGoogleAuthenticationUrlDto,
+  ) {
     return this.get_google_authentication_url_handler.execute({
       callback_url: body.callback_url,
     });
@@ -29,7 +31,7 @@ export class AuthenticationController {
   @ApiOperation({ summary: 'Authenticate with Google OAuth code' })
   @Post('/authenticate_with_google_code')
   async authenticate_with_google_code(
-    @Body() body: AuthenticateWithGoogleCodeDto,
+    @Body() body: AuthenticationAuthenticateWithGoogleCodeDto,
   ) {
     return this.authenticate_with_google_handler.execute({
       code: body.code,

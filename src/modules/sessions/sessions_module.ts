@@ -1,5 +1,5 @@
 import { SessionsController } from '@/modules/sessions/controllers/sessions_controller';
-import { SessionsExplainSentenceHandler } from '@/modules/sessions/handlers/sessions_explain_sentence_handler';
+import { SessionsExplainSentenceHandler } from '@/modules/sessions/handlers/sessions_explain_sentence_handler/sessions_explain_sentence_handler';
 import { OpenAiService } from '@/modules/sessions/services/open_ai_service';
 import { OpenAiServiceApi } from '@/modules/sessions/services/open_ai_service_api';
 import { OpenAiServiceInMemory } from '@/modules/sessions/services/open_ai_service_in_memory';
