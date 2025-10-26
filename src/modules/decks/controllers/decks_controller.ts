@@ -9,6 +9,7 @@ import { JwtAuthGuard } from '@/modules/authentication/guards/jwt.guard';
 import { User } from '@/modules/authentication/decorators/user_decorator';
 import { UsersEntity } from '@/modules/authentication/entities/users_entity';
 import { DecksGetDecksHandler } from '@/modules/decks/handlers/decks_get_decks_handler/decks_get_decks_handler';
+import { DecksGetDeckByIdHandler } from '@/modules/decks/handlers/decks_get_deck_by_id_handler/decks_get_deck_by_id_handler';
 import { DecksSearchDecksHandler } from '@/modules/decks/handlers/decks_search_decks_handler/decks_search_decks_handler';
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
 import { DecksUpdateDeckHandler } from '@/modules/decks/handlers/decks_update_deck_handler/decks_update_deck_handler';
@@ -16,6 +17,7 @@ import { DecksDeleteDeckHandler } from '@/modules/decks/handlers/decks_delete_de
 import { DecksDuplicateDeckHandler } from '@/modules/decks/handlers/decks_duplicate_deck_handler/decks_duplicate_deck_handler';
 import { DecksUpsertCardsHandler } from '@/modules/decks/handlers/decks_upsert_cards_handler/decks_upsert_cards_handler';
 import { DecksGetDecksDto } from '@/modules/decks/dtos/decks_get_decks_dto';
+import { DecksGetDeckByIdDto } from '@/modules/decks/dtos/decks_get_deck_by_id_dto';
 import { DecksCreateDeckDto } from '@/modules/decks/dtos/decks_create_deck_dto';
 import { DecksUpdateDeckDto } from '@/modules/decks/dtos/decks_update_deck_dto';
 import { DecksDeleteDeckDto } from '@/modules/decks/dtos/decks_delete_deck_dto';
@@ -29,6 +31,7 @@ import { DecksEntity } from '@/modules/decks/entities/decks_entity';
 export class DecksController {
   constructor(
     private readonly get_decks_handler: DecksGetDecksHandler,
+    private readonly get_deck_by_id_handler: DecksGetDeckByIdHandler,
     private readonly search_decks_handler: DecksSearchDecksHandler,
     private readonly create_deck_handler: DecksCreateDeckHandler,
     private readonly update_deck_handler: DecksUpdateDeckHandler,
@@ -50,7 +53,25 @@ export class DecksController {
     });
   }
 
+  @ApiOperation({ summary: 'Get a deck by ID' })
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ type: DecksEntity })
+  @Post('/get_deck_by_id')
+  async get_deck_by_id(
+    @Body() body: DecksGetDeckByIdDto,
+    @User() user: UsersEntity,
+  ) {
+    return this.get_deck_by_id_handler.execute({
+      id: body.id,
+      user_id: user.id,
+    });
+  }
+
   @ApiOperation({ summary: 'Search public decks' })
+  @ApiOkResponse({ type: [DecksEntity] })
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(JwtAuthGuard)
   @Post('/search_decks')
   async search_decks(@Body() body: DecksSearchDecksDto) {
     return this.search_decks_handler.execute(body);
@@ -87,7 +108,7 @@ export class DecksController {
   }
 
   @ApiOperation({ summary: 'Delete a deck (soft delete)' })
-  @ApiOkResponse({ type: DecksEntity })
+  @ApiOkResponse()
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Post('/delete_deck')

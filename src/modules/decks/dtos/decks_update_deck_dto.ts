@@ -16,6 +16,10 @@ export const DecksUpdateDeckSchema = z.object({
     .max(10)
     .describe('New back language code')
     .optional(),
+  description: z.string().describe('New description for the deck'),
+  visibility: z
+    .enum(['public', 'private', 'unlisted'])
+    .describe('New visibility for the deck'),
 });
 
 export class DecksUpdateDeckDto extends createZodDto(DecksUpdateDeckSchema) {}

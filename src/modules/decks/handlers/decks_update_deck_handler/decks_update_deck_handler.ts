@@ -1,16 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { DecksEntity } from '@/modules/decks/entities/decks_entity';
+import { DecksUpdateDeckDto } from '@/modules/decks/dtos/decks_update_deck_dto';
 
 type decks_dtos = {
   update_deck: {
-    input: {
-      id: string;
-      user_id: string;
-      name?: string;
-      front_language?: string;
-      back_language?: string;
-    };
+    input: DecksUpdateDeckDto & { user_id: string };
     output: DecksEntity;
   };
 };
@@ -47,6 +42,8 @@ export class DecksUpdateDeckHandler
       name: params.name ?? existing.name,
       front_language: params.front_language ?? existing.front_language,
       back_language: params.back_language ?? existing.back_language,
+      description: params.description ?? existing.description,
+      visibility: params.visibility ?? existing.visibility,
       updated_at: new Date(),
     };
 

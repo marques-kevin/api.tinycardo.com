@@ -13,6 +13,11 @@ export const DecksCreateDeckSchema = z.object({
     .min(2)
     .max(10)
     .describe('Language code for the back of the cards'),
+  description: z.string().optional().describe('Description of the deck'),
+  visibility: z
+    .enum(['public', 'private', 'unlisted'])
+    .default('private')
+    .describe('Visibility of the deck'),
 });
 
 export class DecksCreateDeckDto extends createZodDto(DecksCreateDeckSchema) {}

@@ -42,11 +42,12 @@ export class DecksDuplicateDeckHandler
   ): Promise<decks_dtos['duplicate_deck']['output']> {
     const original_deck = await this.get_deck_to_duplicate(params.deck_id);
 
-    // Create a new deck with the same properties but new ID and owner
     const new_deck: DecksEntity = {
       id: v4(),
       name: `${original_deck.name} (Copy)`,
       user_id: params.user_id,
+      description: original_deck.description,
+      visibility: 'private',
       front_language: original_deck.front_language,
       back_language: original_deck.back_language,
       created_at: new Date(),
@@ -56,7 +57,6 @@ export class DecksDuplicateDeckHandler
 
     const saved_deck = await this.decks_repository.save(new_deck);
 
-    // Duplicate all cards from the original deck
     const original_cards = await this.cards_repository.find_all({
       where: { deck_id: params.deck_id },
     });

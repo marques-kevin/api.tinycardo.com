@@ -18,6 +18,10 @@ export class DecksEntity {
   @Column()
   name: string;
 
+  @ApiProperty({ description: 'Description of the deck' })
+  @Column()
+  description: string;
+
   @ApiProperty({ description: 'User ID who owns the deck' })
   @Column()
   user_id: string;
@@ -29,6 +33,10 @@ export class DecksEntity {
   @ApiProperty({ description: 'Language of the back side of cards' })
   @Column()
   back_language: string;
+
+  @ApiProperty({ description: 'Public visibility of the deck' })
+  @Column({ type: 'varchar', length: 255 })
+  visibility: 'public' | 'private' | 'unlisted';
 
   @ApiProperty({
     description: 'Creation timestamp',

@@ -41,6 +41,7 @@ export class DecksSearchDecksHandler
     // Build the where clause
     const where: Record<string, string | null> = {
       deleted_at: null,
+      visibility: 'public',
     };
 
     if (params.front_language) {
@@ -51,14 +52,11 @@ export class DecksSearchDecksHandler
       where.back_language = params.back_language;
     }
 
-    // For title search, we need to get all decks and filter manually
-    // since the BaseRepository doesn't support LIKE queries
     let all_decks = await this.decks_repository.find_all({
       where,
       order: ['created_at', 'DESC'],
     });
 
-    // Filter by title if provided (case-insensitive partial match)
     if (params.title) {
       const title_lower = params.title.toLowerCase();
       all_decks = all_decks.filter((deck) =>

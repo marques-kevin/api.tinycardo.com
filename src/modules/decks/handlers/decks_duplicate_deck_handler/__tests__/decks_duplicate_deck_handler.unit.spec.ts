@@ -37,6 +37,8 @@ describe('decks_duplicate_deck_handler', () => {
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
+      description: 'Spanish basics deck',
     });
 
     const duplicated = await duplicate_handler.execute({
@@ -65,6 +67,8 @@ describe('decks_duplicate_deck_handler', () => {
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
+      description: 'Spanish basics deck',
     });
 
     await upsert_cards_handler.execute({
@@ -115,6 +119,8 @@ describe('decks_duplicate_deck_handler', () => {
       name: 'My Deck',
       front_language: 'fr',
       back_language: 'en',
+      visibility: 'private',
+      description: 'My Deck',
     });
 
     const duplicated = await duplicate_handler.execute({
@@ -136,6 +142,8 @@ describe('decks_duplicate_deck_handler', () => {
       name: 'Empty Deck',
       front_language: 'de',
       back_language: 'en',
+      visibility: 'private',
+      description: 'Empty Deck',
     });
 
     const duplicated = await duplicate_handler.execute({
@@ -170,6 +178,8 @@ describe('decks_duplicate_deck_handler', () => {
       name: 'Deck to delete',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
+      description: 'Deck to delete',
     });
 
     await delete_handler.execute({

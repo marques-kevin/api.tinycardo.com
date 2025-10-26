@@ -2,6 +2,7 @@ import { DecksEntity } from '@/modules/decks/entities/decks_entity';
 import { CardsEntity } from '@/modules/cards/entities/cards_entity';
 import { DecksController } from '@/modules/decks/controllers/decks_controller';
 import { DecksGetDecksHandler } from '@/modules/decks/handlers/decks_get_decks_handler/decks_get_decks_handler';
+import { DecksGetDeckByIdHandler } from '@/modules/decks/handlers/decks_get_deck_by_id_handler/decks_get_deck_by_id_handler';
 import { DecksSearchDecksHandler } from '@/modules/decks/handlers/decks_search_decks_handler/decks_search_decks_handler';
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
 import { DecksUpdateDeckHandler } from '@/modules/decks/handlers/decks_update_deck_handler/decks_update_deck_handler';
@@ -20,6 +21,7 @@ export const decks_module = {
   controllers: [DecksController],
   handlers: [
     DecksGetDecksHandler,
+    DecksGetDeckByIdHandler,
     DecksSearchDecksHandler,
     DecksCreateDeckHandler,
     DecksUpdateDeckHandler,
