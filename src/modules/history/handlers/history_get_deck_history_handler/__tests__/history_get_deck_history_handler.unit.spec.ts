@@ -1,6 +1,5 @@
 import { create_testing_module } from '@/tests/create_testing_module';
 import { HistoryGetDeckHistoryHandler } from '@/modules/history/handlers/history_get_deck_history_handler/history_get_deck_history_handler';
-import { HistoryRepository } from '@/modules/history/repositories/history_repository';
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
 import { HistoryReviewCardHandler } from '@/modules/history/handlers/history_review_card_handler/history_review_card_handler';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
@@ -8,7 +7,6 @@ import { v4 } from 'uuid';
 
 describe('history_get_deck_history_handler', () => {
   let handler: HistoryGetDeckHistoryHandler;
-  let history_repository: HistoryRepository;
   let create_deck_handler: DecksCreateDeckHandler;
   let cards_repository: CardsRepository;
 
@@ -17,7 +15,6 @@ describe('history_get_deck_history_handler', () => {
   beforeEach(async () => {
     const module = await create_testing_module();
     handler = module.get(HistoryGetDeckHistoryHandler);
-    history_repository = module.get(HistoryRepository);
     create_deck_handler = module.get(DecksCreateDeckHandler);
     review_card_handler = module.get(HistoryReviewCardHandler);
     cards_repository = module.get(CardsRepository);

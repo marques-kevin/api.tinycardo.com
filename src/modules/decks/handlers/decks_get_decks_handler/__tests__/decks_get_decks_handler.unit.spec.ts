@@ -29,6 +29,7 @@ describe('decks_get_decks_handler', () => {
       name: 'A-older',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     const newer = await create_handler.execute({
@@ -36,6 +37,7 @@ describe('decks_get_decks_handler', () => {
       name: 'A-newer',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     // Normalize created_at values to control ordering
@@ -50,6 +52,7 @@ describe('decks_get_decks_handler', () => {
       name: 'B-deck',
       front_language: 'fr',
       back_language: 'en',
+      visibility: 'private',
     });
 
     const result = await get_handler.execute({ user_id: userA });
@@ -67,18 +70,21 @@ describe('decks_get_decks_handler', () => {
       name: 'C-1',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
     const c2 = await create_handler.execute({
       user_id,
       name: 'C-2',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
     const c3 = await create_handler.execute({
       user_id,
       name: 'C-3',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     // Ensure deterministic created_at ordering: DESC => [C-3, C-2, C-1]

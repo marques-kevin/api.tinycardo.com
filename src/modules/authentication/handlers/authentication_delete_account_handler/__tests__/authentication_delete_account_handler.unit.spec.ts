@@ -68,6 +68,7 @@ describe('authentication_delete_account_handler', () => {
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     const deck2 = await create_deck_handler.execute({
@@ -75,6 +76,7 @@ describe('authentication_delete_account_handler', () => {
       name: 'French Basics',
       front_language: 'fr',
       back_language: 'en',
+      visibility: 'private',
     });
 
     await delete_account_handler.execute({
@@ -108,6 +110,7 @@ describe('authentication_delete_account_handler', () => {
       name: 'Spanish Advanced',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     await delete_account_handler.execute({
@@ -140,6 +143,7 @@ describe('authentication_delete_account_handler', () => {
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     await upsert_cards_handler.execute({
@@ -204,6 +208,7 @@ describe('authentication_delete_account_handler', () => {
         name: `Deck ${i}`,
         front_language: 'es',
         back_language: 'en',
+        visibility: 'private',
       });
     }
 

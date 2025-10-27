@@ -33,7 +33,8 @@ export class HistoryController {
   ) {
     return this.review_card_handler.execute({
       user_id: user.id,
-      cards: body.cards,
+      card_id: body.card_id,
+      status: body.status,
     });
   }
 

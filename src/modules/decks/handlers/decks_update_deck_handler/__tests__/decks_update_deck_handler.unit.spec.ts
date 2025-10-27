@@ -26,6 +26,7 @@ describe('decks_update_deck_handler', () => {
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     const updated = await update_handler.execute({
@@ -51,6 +52,7 @@ describe('decks_update_deck_handler', () => {
       name: 'Deck',
       front_language: 'fr',
       back_language: 'en',
+      visibility: 'private',
     });
 
     await expect(

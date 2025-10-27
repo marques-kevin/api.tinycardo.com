@@ -29,6 +29,7 @@ describe('decks_delete_deck_handler', () => {
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     expect(created.deleted_at).toBeNull();
@@ -51,6 +52,7 @@ describe('decks_delete_deck_handler', () => {
       name: 'Deck 1',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     const deck2 = await create_handler.execute({
@@ -58,6 +60,7 @@ describe('decks_delete_deck_handler', () => {
       name: 'Deck 2',
       front_language: 'fr',
       back_language: 'en',
+      visibility: 'private',
     });
 
     const before_delete = await get_decks_handler.execute({ user_id });
@@ -79,6 +82,7 @@ describe('decks_delete_deck_handler', () => {
       name: 'Deck',
       front_language: 'fr',
       back_language: 'en',
+      visibility: 'private',
     });
 
     await expect(

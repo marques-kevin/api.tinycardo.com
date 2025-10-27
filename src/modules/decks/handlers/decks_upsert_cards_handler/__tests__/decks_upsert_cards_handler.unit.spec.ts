@@ -26,6 +26,7 @@ describe('decks_upsert_cards_handler', () => {
       name: 'Deck',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     const result = await upsert_cards.execute({
@@ -53,6 +54,7 @@ describe('decks_upsert_cards_handler', () => {
       name: 'Deck',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     // Seed with two cards
@@ -97,6 +99,7 @@ describe('decks_upsert_cards_handler', () => {
       name: 'Deck',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     await expect(

@@ -22,6 +22,7 @@ describe('decks_create_deck_handler', () => {
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'private',
     });
 
     expect(result).toBeDefined();
