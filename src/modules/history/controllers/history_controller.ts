@@ -22,8 +22,8 @@ export class HistoryController {
     private readonly get_deck_history_handler: HistoryGetDeckHistoryHandler,
   ) {}
 
-  @ApiOperation({ summary: 'Review a card (mark as known or unknown)' })
-  @ApiOkResponse({ type: HistoryEntity })
+  @ApiOperation({ summary: 'Review cards (mark as known or unknown)' })
+  @ApiOkResponse({ type: [HistoryEntity] })
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Post('/review')
@@ -33,8 +33,7 @@ export class HistoryController {
   ) {
     return this.review_card_handler.execute({
       user_id: user.id,
-      card_id: body.card_id,
-      status: body.status,
+      cards: body.cards,
     });
   }
 

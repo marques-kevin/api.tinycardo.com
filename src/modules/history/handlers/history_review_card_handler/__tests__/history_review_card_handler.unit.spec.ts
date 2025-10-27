@@ -2,7 +2,7 @@ import { create_testing_module } from '@/tests/create_testing_module';
 import { HistoryReviewCardHandler } from '@/modules/history/handlers/history_review_card_handler/history_review_card_handler';
 import { HistoryRepository } from '@/modules/history/repositories/history_repository';
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
-import { CardsCreateCardHandler } from '@/modules/cards/handlers/cards_create_card_handler/cards_create_card_handler';
+import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
 import {
   BASE_EASE_FACTOR,
   MIN_EASE_FACTOR,
@@ -13,14 +13,14 @@ describe('history_review_card_handler', () => {
   let handler: HistoryReviewCardHandler;
   let history_repository: HistoryRepository;
   let create_deck_handler: DecksCreateDeckHandler;
-  let create_card_handler: CardsCreateCardHandler;
+  let cards_repository: CardsRepository;
 
   beforeEach(async () => {
     const module = await create_testing_module();
     handler = module.get(HistoryReviewCardHandler);
     history_repository = module.get(HistoryRepository);
     create_deck_handler = module.get(DecksCreateDeckHandler);
-    create_card_handler = module.get(CardsCreateCardHandler);
+    cards_repository = module.get(CardsRepository);
   });
 
   it('should be defined', () => {
@@ -44,13 +44,16 @@ describe('history_review_card_handler', () => {
         name: 'Spanish Basics',
         front_language: 'es',
         back_language: 'en',
+        visibility: 'private',
       });
 
-      const card = await create_card_handler.execute({
-        user_id: 'user-1',
+      const card = await cards_repository.save({
+        id: 'test-card-1',
         deck_id: deck.id,
         front: 'Hola',
         back: 'Hello',
+        created_at: new Date(),
+        updated_at: new Date(),
       });
 
       const before = new Date();
@@ -93,13 +96,16 @@ describe('history_review_card_handler', () => {
         name: 'Spanish Basics',
         front_language: 'es',
         back_language: 'en',
+        visibility: 'private',
       });
 
-      const card = await create_card_handler.execute({
-        user_id: 'user-1',
+      const card = await cards_repository.save({
+        id: 'test-card-2',
         deck_id: deck.id,
         front: 'Hola',
         back: 'Hello',
+        created_at: new Date(),
+        updated_at: new Date(),
       });
 
       const before = new Date();
@@ -132,13 +138,16 @@ describe('history_review_card_handler', () => {
         name: 'Spanish Basics',
         front_language: 'es',
         back_language: 'en',
+        visibility: 'private',
       });
 
-      const card = await create_card_handler.execute({
-        user_id: 'user-1',
+      const card = await cards_repository.save({
+        id: 'test-card-3',
         deck_id: deck.id,
         front: 'Hola',
         back: 'Hello',
+        created_at: new Date(),
+        updated_at: new Date(),
       });
 
       // First review - known
@@ -198,13 +207,16 @@ describe('history_review_card_handler', () => {
         name: 'Spanish Basics',
         front_language: 'es',
         back_language: 'en',
+        visibility: 'private',
       });
 
-      const card = await create_card_handler.execute({
-        user_id: 'user-1',
+      const card = await cards_repository.save({
+        id: 'test-card-4',
         deck_id: deck.id,
         front: 'Hola',
         back: 'Hello',
+        created_at: new Date(),
+        updated_at: new Date(),
       });
 
       // First review - known
@@ -240,13 +252,16 @@ describe('history_review_card_handler', () => {
         name: 'Spanish Basics',
         front_language: 'es',
         back_language: 'en',
+        visibility: 'private',
       });
 
-      const card = await create_card_handler.execute({
-        user_id: 'user-1',
+      const card = await cards_repository.save({
+        id: 'test-card-5',
         deck_id: deck.id,
         front: 'Hola',
         back: 'Hello',
+        created_at: new Date(),
+        updated_at: new Date(),
       });
 
       // Create a history record with ease factor close to minimum
@@ -292,13 +307,16 @@ describe('history_review_card_handler', () => {
         name: 'Spanish Basics',
         front_language: 'es',
         back_language: 'en',
+        visibility: 'private',
       });
 
-      const card = await create_card_handler.execute({
-        user_id: 'user-1',
+      const card = await cards_repository.save({
+        id: 'test-card-6',
         deck_id: deck.id,
         front: 'Hola',
         back: 'Hello',
+        created_at: new Date(),
+        updated_at: new Date(),
       });
 
       // Create a history record with ease factor close to maximum
@@ -343,13 +361,16 @@ describe('history_review_card_handler', () => {
         name: 'Spanish Basics',
         front_language: 'es',
         back_language: 'en',
+        visibility: 'private',
       });
 
-      const card = await create_card_handler.execute({
-        user_id: 'user-1',
+      const card = await cards_repository.save({
+        id: 'test-card-7',
         deck_id: deck.id,
         front: 'Hola',
         back: 'Hello',
+        created_at: new Date(),
+        updated_at: new Date(),
       });
 
       const result = await handler.execute({
@@ -375,13 +396,16 @@ describe('history_review_card_handler', () => {
         name: 'Spanish Basics',
         front_language: 'es',
         back_language: 'en',
+        visibility: 'private',
       });
 
-      const card = await create_card_handler.execute({
-        user_id: 'user-1',
+      const card = await cards_repository.save({
+        id: 'test-card-8',
         deck_id: deck.id,
         front: 'Hola',
         back: 'Hello',
+        created_at: new Date(),
+        updated_at: new Date(),
       });
 
       const first_review = await handler.execute({

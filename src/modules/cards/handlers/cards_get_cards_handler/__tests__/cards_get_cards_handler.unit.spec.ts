@@ -1,18 +1,22 @@
 import { create_testing_module } from '@/tests/create_testing_module';
 import { CardsGetCardsHandler } from '@/modules/cards/handlers/cards_get_cards_handler/cards_get_cards_handler';
-import { CardsCreateCardHandler } from '@/modules/cards/handlers/cards_create_card_handler/cards_create_card_handler';
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
+import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
+import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
+import { v4 } from 'uuid';
 
 describe('cards_get_cards_handler', () => {
   let get_cards_handler: CardsGetCardsHandler;
-  let create_card_handler: CardsCreateCardHandler;
   let create_deck_handler: DecksCreateDeckHandler;
+  let cards_repository: CardsRepository;
+  let decks_repository: DecksRepository;
 
   beforeEach(async () => {
     const module = await create_testing_module();
     get_cards_handler = module.get(CardsGetCardsHandler);
-    create_card_handler = module.get(CardsCreateCardHandler);
     create_deck_handler = module.get(DecksCreateDeckHandler);
+    cards_repository = module.get(CardsRepository);
+    decks_repository = module.get(DecksRepository);
   });
 
   it('should be defined', () => {
@@ -20,34 +24,45 @@ describe('cards_get_cards_handler', () => {
   });
 
   it('should get all cards for a deck', async () => {
-    const deck = await create_deck_handler.execute({
+    const deck = await decks_repository.save({
       user_id: 'user-1',
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'public',
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+      description: 'Spanish Basics',
+      id: v4(),
     });
 
-    await create_card_handler.execute({
-      user_id: 'user-1',
+    await cards_repository.save({
+      id: v4(),
       deck_id: deck.id,
       front: 'Hola',
       back: 'Hello',
+      created_at: new Date(),
+      updated_at: new Date(),
     });
 
-    await create_card_handler.execute({
-      user_id: 'user-1',
+    await cards_repository.save({
+      id: v4(),
       deck_id: deck.id,
       front: 'Adiós',
       back: 'Goodbye',
+      created_at: new Date(),
+      updated_at: new Date(),
     });
 
-    await create_card_handler.execute({
-      user_id: 'user-1',
+    await cards_repository.save({
+      id: v4(),
       deck_id: deck.id,
       front: 'Gracias',
       back: 'Thank you',
+      created_at: new Date(),
+      updated_at: new Date(),
     });
-
     const result = await get_cards_handler.execute({
       user_id: 'user-1',
       deck_id: deck.id,
@@ -60,11 +75,17 @@ describe('cards_get_cards_handler', () => {
   });
 
   it('should return empty array when deck has no cards', async () => {
-    const deck = await create_deck_handler.execute({
+    const deck = await decks_repository.save({
+      id: v4(),
       user_id: 'user-1',
       name: 'Empty Deck',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'public',
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+      description: 'Empty Deck',
     });
 
     const result = await get_cards_handler.execute({
@@ -76,32 +97,48 @@ describe('cards_get_cards_handler', () => {
   });
 
   it('should only return cards for the specified deck', async () => {
-    const deck1 = await create_deck_handler.execute({
+    const deck1 = await decks_repository.save({
       user_id: 'user-1',
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'public',
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+      description: 'Spanish Basics',
+      id: v4(),
     });
 
-    const deck2 = await create_deck_handler.execute({
+    const deck2 = await decks_repository.save({
       user_id: 'user-1',
       name: 'French Basics',
       front_language: 'fr',
       back_language: 'en',
+      visibility: 'public',
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+      description: 'French Basics',
+      id: v4(),
     });
 
-    await create_card_handler.execute({
-      user_id: 'user-1',
+    await cards_repository.save({
+      id: v4(),
       deck_id: deck1.id,
       front: 'Hola',
       back: 'Hello',
+      created_at: new Date(),
+      updated_at: new Date(),
     });
 
-    await create_card_handler.execute({
-      user_id: 'user-1',
+    await cards_repository.save({
+      id: v4(),
       deck_id: deck2.id,
       front: 'Bonjour',
       back: 'Hello',
+      created_at: new Date(),
+      updated_at: new Date(),
     });
 
     const result = await get_cards_handler.execute({
@@ -116,6 +153,7 @@ describe('cards_get_cards_handler', () => {
   it('should throw when user does not own the deck', async () => {
     const deck = await create_deck_handler.execute({
       user_id: 'owner',
+      visibility: 'public',
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',

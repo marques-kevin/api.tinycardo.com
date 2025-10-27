@@ -22,6 +22,7 @@ describe('decks_search_decks_handler', () => {
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'public',
     });
 
     await create_handler.execute({
@@ -29,6 +30,7 @@ describe('decks_search_decks_handler', () => {
       name: 'French Basics',
       front_language: 'fr',
       back_language: 'en',
+      visibility: 'public',
     });
 
     const result = await search_handler.execute({});
@@ -46,6 +48,7 @@ describe('decks_search_decks_handler', () => {
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'public',
     });
 
     await create_handler.execute({
@@ -53,6 +56,7 @@ describe('decks_search_decks_handler', () => {
       name: 'French Basics',
       front_language: 'fr',
       back_language: 'en',
+      visibility: 'public',
     });
 
     await create_handler.execute({
@@ -60,6 +64,7 @@ describe('decks_search_decks_handler', () => {
       name: 'Spanish Advanced',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'public',
     });
 
     const result = await search_handler.execute({
@@ -77,6 +82,7 @@ describe('decks_search_decks_handler', () => {
       name: 'Spanish to English',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'public',
     });
 
     await create_handler.execute({
@@ -84,6 +90,7 @@ describe('decks_search_decks_handler', () => {
       name: 'Spanish to French',
       front_language: 'es',
       back_language: 'fr',
+      visibility: 'public',
     });
 
     const result = await search_handler.execute({
@@ -101,6 +108,7 @@ describe('decks_search_decks_handler', () => {
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'public',
     });
 
     await create_handler.execute({
@@ -108,6 +116,7 @@ describe('decks_search_decks_handler', () => {
       name: 'Spanish Advanced',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'public',
     });
 
     await create_handler.execute({
@@ -115,6 +124,7 @@ describe('decks_search_decks_handler', () => {
       name: 'French Basics',
       front_language: 'fr',
       back_language: 'en',
+      visibility: 'public',
     });
 
     const result = await search_handler.execute({
@@ -134,6 +144,7 @@ describe('decks_search_decks_handler', () => {
       name: 'Spanish Basics',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'public',
     });
 
     await create_handler.execute({
@@ -141,6 +152,7 @@ describe('decks_search_decks_handler', () => {
       name: 'Spanish Advanced',
       front_language: 'es',
       back_language: 'fr',
+      visibility: 'public',
     });
 
     await create_handler.execute({
@@ -148,6 +160,7 @@ describe('decks_search_decks_handler', () => {
       name: 'French Basics',
       front_language: 'fr',
       back_language: 'en',
+      visibility: 'public',
     });
 
     const result = await search_handler.execute({
@@ -171,6 +184,7 @@ describe('decks_search_decks_handler', () => {
         name: `Deck ${i}`,
         front_language: 'es',
         back_language: 'en',
+        visibility: 'public',
       });
     }
 
@@ -237,6 +251,7 @@ describe('decks_search_decks_handler', () => {
         name: `Deck ${i}`,
         front_language: 'es',
         back_language: 'en',
+        visibility: 'public',
       });
     }
 
@@ -254,6 +269,7 @@ describe('decks_search_decks_handler', () => {
       name: 'Deck 1',
       front_language: 'es',
       back_language: 'en',
+      visibility: 'public',
     });
 
     const result = await search_handler.execute({
