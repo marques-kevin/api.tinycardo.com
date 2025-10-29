@@ -63,3 +63,14 @@ export class DecksEntity {
   @DeleteDateColumn()
   deleted_at: Date | null;
 }
+
+export class DecksEntityWithStats extends DecksEntity {
+  @ApiProperty({ description: 'Number of cards in the deck' })
+  number_of_cards: number;
+
+  @ApiProperty({ description: 'Number of cards ready to be reviewed' })
+  number_of_cards_ready_to_be_reviewed: number;
+
+  @ApiProperty({ description: 'Number of cards not ready to be reviewed' })
+  number_of_cards_not_ready_to_be_reviewed: number;
+}
