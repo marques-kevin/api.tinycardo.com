@@ -5,6 +5,7 @@ import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_de
 describe('decks_search_decks_handler', () => {
   let search_handler: DecksSearchDecksHandler;
   let create_handler: DecksCreateDeckHandler;
+  const user_ctx = 'user-ctx';
 
   beforeEach(async () => {
     const module = await create_testing_module();
@@ -33,7 +34,7 @@ describe('decks_search_decks_handler', () => {
       visibility: 'public',
     });
 
-    const result = await search_handler.execute({});
+    const result = await search_handler.execute({ user_id: user_ctx });
 
     expect(result.decks.length).toBe(2);
     expect(result.total).toBe(2);
@@ -68,6 +69,7 @@ describe('decks_search_decks_handler', () => {
     });
 
     const result = await search_handler.execute({
+      user_id: user_ctx,
       front_language: 'es',
     });
 
@@ -94,6 +96,7 @@ describe('decks_search_decks_handler', () => {
     });
 
     const result = await search_handler.execute({
+      user_id: user_ctx,
       back_language: 'fr',
     });
 
@@ -128,6 +131,7 @@ describe('decks_search_decks_handler', () => {
     });
 
     const result = await search_handler.execute({
+      user_id: user_ctx,
       title: 'spanish',
     });
 
@@ -164,6 +168,7 @@ describe('decks_search_decks_handler', () => {
     });
 
     const result = await search_handler.execute({
+      user_id: user_ctx,
       front_language: 'es',
       back_language: 'en',
       title: 'basics',
@@ -190,6 +195,7 @@ describe('decks_search_decks_handler', () => {
 
     // Page 1 with limit 5
     const page1 = await search_handler.execute({
+      user_id: user_ctx,
       limit: 5,
       page: 1,
     });
@@ -202,6 +208,7 @@ describe('decks_search_decks_handler', () => {
 
     // Page 2 with limit 5
     const page2 = await search_handler.execute({
+      user_id: user_ctx,
       limit: 5,
       page: 2,
     });
@@ -213,6 +220,7 @@ describe('decks_search_decks_handler', () => {
 
     // Page 3 with limit 5
     const page3 = await search_handler.execute({
+      user_id: user_ctx,
       limit: 5,
       page: 3,
     });
@@ -234,6 +242,7 @@ describe('decks_search_decks_handler', () => {
 
   it('should handle empty results', async () => {
     const result = await search_handler.execute({
+      user_id: user_ctx,
       front_language: 'non-existent',
     });
 
@@ -256,6 +265,7 @@ describe('decks_search_decks_handler', () => {
     }
 
     const result = await search_handler.execute({
+      user_id: user_ctx,
       limit: 0,
     });
 
@@ -273,6 +283,7 @@ describe('decks_search_decks_handler', () => {
     });
 
     const result = await search_handler.execute({
+      user_id: user_ctx,
       page: 0,
     });
 

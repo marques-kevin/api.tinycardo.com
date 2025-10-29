@@ -10,6 +10,7 @@ type decks_dtos = {
       front_language?: string;
       back_language?: string;
       title?: string;
+      user_id: string;
     };
     output: {
       decks: DecksEntity[];
@@ -36,39 +37,16 @@ export class DecksSearchDecksHandler
   ): Promise<decks_dtos['search_decks']['output']> {
     const limit = params.limit && params.limit > 0 ? params.limit : 10;
     const page = params.page && params.page > 0 ? params.page : 1;
-    const skip = (page - 1) * limit;
-
-    // Build the where clause
-    const where: Record<string, string | null> = {
-      deleted_at: null,
-      visibility: 'public',
-    };
-
-    if (params.front_language) {
-      where.front_language = params.front_language;
-    }
-
-    if (params.back_language) {
-      where.back_language = params.back_language;
-    }
-
-    let all_decks = await this.decks_repository.find_all({
-      where,
-      order: ['created_at', 'DESC'],
+    const { decks, total } = await this.decks_repository.search({
+      limit,
+      page,
+      exclude_user_id: params.user_id,
+      front_language: params.front_language,
+      back_language: params.back_language,
+      title: params.title,
     });
 
-    if (params.title) {
-      const title_lower = params.title.toLowerCase();
-      all_decks = all_decks.filter((deck) =>
-        deck.name.toLowerCase().includes(title_lower),
-      );
-    }
-
-    const total = all_decks.length;
     const total_pages = Math.ceil(total / limit);
-
-    // Apply pagination
-    const decks = all_decks.slice(skip, skip + limit);
 
     return {
       decks,

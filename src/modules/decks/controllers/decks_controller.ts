@@ -24,7 +24,10 @@ import { DecksDeleteDeckDto } from '@/modules/decks/dtos/decks_delete_deck_dto';
 import { DecksDuplicateDeckDto } from '@/modules/decks/dtos/decks_duplicate_deck_dto';
 import { DecksSearchDecksDto } from '@/modules/decks/dtos/decks_search_decks_dto';
 import { DecksUpsertCardsDto } from '@/modules/decks/dtos/decks_upsert_cards_dto';
-import { DecksEntity } from '@/modules/decks/entities/decks_entity';
+import {
+  DecksEntity,
+  DecksEntityWithStats,
+} from '@/modules/decks/entities/decks_entity';
 
 @ApiTags('Decks')
 @Controller('/decks')
@@ -41,15 +44,13 @@ export class DecksController {
   ) {}
 
   @ApiOperation({ summary: 'Get user decks' })
-  @ApiOkResponse({ type: [DecksEntity] })
+  @ApiOkResponse({ type: [DecksEntityWithStats] })
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Post('/get_decks')
-  async get_decks(@User() user: UsersEntity, @Body() body: DecksGetDecksDto) {
+  async get_decks(@User() user: UsersEntity) {
     return this.get_decks_handler.execute({
       user_id: user.id,
-      take: body.take,
-      skip: body.skip,
     });
   }
 
@@ -73,8 +74,14 @@ export class DecksController {
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Post('/search_decks')
-  async search_decks(@Body() body: DecksSearchDecksDto) {
-    return this.search_decks_handler.execute(body);
+  async search_decks(
+    @Body() body: DecksSearchDecksDto,
+    @User() user: UsersEntity,
+  ) {
+    return this.search_decks_handler.execute({
+      user_id: user.id,
+      ...body,
+    });
   }
 
   @ApiOperation({ summary: 'Create a new deck' })
