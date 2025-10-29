@@ -171,7 +171,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Run database migrations
-        run: yarn migrate:test
+        run: yarn migration:run
         env:
           NODE_ENV: test
 
