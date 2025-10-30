@@ -49,7 +49,7 @@ export class DecksRepositoryInMemory
     return { decks, total };
   }
 
-  async refresh_decks_user_count(): Promise<void> {}
+  async refresh_decks_stats(): Promise<void> {}
 
   async get_decks_stats(
     params: Parameters<DecksRepository['get_decks_stats']>[0],
@@ -63,6 +63,7 @@ export class DecksRepositoryInMemory
     return decks.map((deck) => ({
       deck_id: deck.id,
       user_count: 0,
+      card_count: 0,
     }));
   }
 }

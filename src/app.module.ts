@@ -43,9 +43,8 @@ export function get_app_imports() {
   ];
 }
 
-@Module({
-  imports: [...get_app_imports()],
-  controllers: [
+export function get_app_controllers() {
+  return [
     ...authentication_module.controllers,
     ...cards_module.controllers,
     ...decks_module.controllers,
@@ -53,8 +52,11 @@ export function get_app_imports() {
     ...sessions_module.controllers,
     ...health_module.controllers,
     ...streak_module.controllers,
-  ],
-  providers: [
+  ];
+}
+
+export function get_app_providers() {
+  return [
     ...authentication_module.repositories,
     ...authentication_module.services,
     ...authentication_module.handlers,
@@ -68,6 +70,12 @@ export function get_app_imports() {
     ...sessions_module.handlers,
     ...streak_module.repositories,
     ...streak_module.handlers,
-  ],
+  ];
+}
+
+@Module({
+  imports: [...get_app_imports()],
+  controllers: [...get_app_controllers()],
+  providers: [...get_app_providers()],
 })
 export class AppModule {}

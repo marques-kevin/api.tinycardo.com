@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { CardsEntity } from '@/modules/cards/entities/cards_entity';
@@ -29,8 +33,12 @@ export class CardsGetCardsHandler
   ) {
     const deck = await this.decks_repository.find_by_id(deck_id);
 
-    if (!deck || deck.user_id !== user_id || deck.deleted_at) {
+    if (!deck) {
       throw new Error('Deck not found');
+    }
+
+    if (deck.visibility === 'private' && deck.user_id !== user_id) {
+      throw new ForbiddenException('Access denied: This deck is private');
     }
 
     return deck;

@@ -42,7 +42,7 @@ export class DecksSearchDecksHandler
       return {
         ...deck,
         number_of_users_who_use_the_deck: deck_stats?.user_count || 0,
-        number_of_cards: 0,
+        number_of_cards: deck_stats?.card_count || 0,
         number_of_cards_ready_to_be_reviewed: 0,
         number_of_cards_not_ready_to_be_reviewed: 0,
       };

@@ -9,6 +9,8 @@ export class GoogleServiceApi extends GoogleService {
   async get_authentication_url(params: { callback_url: string }) {
     const url = this.get_auth_client(params.callback_url).generateAuthUrl({
       scope: SCOPES,
+      access_type: 'offline',
+      prompt: 'consent',
     });
 
     return { url };

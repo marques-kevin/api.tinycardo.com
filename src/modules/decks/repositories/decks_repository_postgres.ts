@@ -61,10 +61,10 @@ export class DecksRepositoryPostgres
     return { decks, total };
   }
 
-  async refresh_decks_user_count(): ReturnType<
-    DecksRepository['refresh_decks_user_count']
+  async refresh_decks_stats(): ReturnType<
+    DecksRepository['refresh_decks_stats']
   > {
-    await this.repository.query('REFRESH MATERIALIZED VIEW decks_user_count');
+    await this.repository.query('REFRESH MATERIALIZED VIEW decks_stats');
   }
 
   async get_decks_stats(
@@ -76,17 +76,22 @@ export class DecksRepositoryPostgres
 
     const rows = await this.repository.query(
       `
-        SELECT deck_id, user_count
-        FROM decks_user_count
+        SELECT deck_id, user_count, card_count
+        FROM decks_stats
         WHERE deck_id = ANY($1::varchar[])
       `,
       [params.deck_ids],
     );
 
-    const rows_parsed: { deck_id: string; user_count: number }[] = rows.map(
-      (row: { deck_id: string; user_count: number }) => ({
+    const rows_parsed: {
+      deck_id: string;
+      user_count: number;
+      card_count: number;
+    }[] = rows.map(
+      (row: { deck_id: string; user_count: number; card_count: number }) => ({
         deck_id: row.deck_id,
         user_count: Number(row.user_count),
+        card_count: Number(row.card_count),
       }),
     );
 

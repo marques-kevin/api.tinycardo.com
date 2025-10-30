@@ -12,4 +12,4 @@ ENV NODE_ENV=production
 ENV PORT=3000
 EXPOSE 3000
 
-CMD ["yarn", "pm2-runtime", "ecosystem.config.js", "--only", "application"]
+CMD ["yarn", "pm2-runtime", "ecosystem.config.js", "--only", "application,cron"]

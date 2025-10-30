@@ -4,13 +4,12 @@ import { Cron } from '@nestjs/schedule';
 import { CronExpression } from '@nestjs/schedule';
 
 @Injectable()
-export class DecksRefreshDecksUserCountCronHandler
-  implements Handler<void, void>
-{
+export class DecksRefreshDecksStatsCronHandler implements Handler<void, void> {
   constructor(private readonly decks_repository: DecksRepository) {}
 
   @Cron(CronExpression.EVERY_10_MINUTES)
   public async execute(): Promise<void> {
-    await this.decks_repository.refresh_decks_user_count();
+    console.log('Refreshing decks stats');
+    await this.decks_repository.refresh_decks_stats();
   }
 }

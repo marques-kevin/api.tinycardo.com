@@ -203,7 +203,7 @@ describe('decks_repository_postgres.search (int)', () => {
     expect(page_1_result.total).toBeGreaterThanOrEqual(10);
   });
 
-  it('refresh_decks_user_count refreshes MV with correct per-user counts', async () => {
+  it('refresh_decks_stats refreshes MV with correct per-user counts', async () => {
     const users_repository_orm = testing_module.get<Repository<UsersEntity>>(
       getRepositoryToken(UsersEntity),
     );
@@ -263,7 +263,7 @@ describe('decks_repository_postgres.search (int)', () => {
       updated_at: new Date(),
     });
 
-    await decks_repository.refresh_decks_user_count();
+    await decks_repository.refresh_decks_stats();
 
     const rows_before_refresh = await decks_repository.get_decks_stats({
       deck_ids: [
@@ -274,8 +274,16 @@ describe('decks_repository_postgres.search (int)', () => {
 
     expect(rows_before_refresh.length).toBe(2);
     expect(rows_before_refresh).toEqual([
-      { deck_id: deck_who_noone_has_ever_used.id, user_count: 0 },
-      { deck_id: deck_who_has_been_used_by_all_users.id, user_count: 1 },
+      {
+        deck_id: deck_who_noone_has_ever_used.id,
+        user_count: 0,
+        card_count: 0,
+      },
+      {
+        deck_id: deck_who_has_been_used_by_all_users.id,
+        user_count: 1,
+        card_count: 0,
+      },
     ]);
 
     await history_repository.save({
@@ -291,7 +299,7 @@ describe('decks_repository_postgres.search (int)', () => {
       updated_at: new Date(),
     });
 
-    await decks_repository.refresh_decks_user_count();
+    await decks_repository.refresh_decks_stats();
 
     const rows_after_refresh = await decks_repository.get_decks_stats({
       deck_ids: [
@@ -301,8 +309,16 @@ describe('decks_repository_postgres.search (int)', () => {
     });
 
     expect(rows_after_refresh).toEqual([
-      { deck_id: deck_who_noone_has_ever_used.id, user_count: 0 },
-      { deck_id: deck_who_has_been_used_by_all_users.id, user_count: 2 },
+      {
+        deck_id: deck_who_noone_has_ever_used.id,
+        user_count: 0,
+        card_count: 0,
+      },
+      {
+        deck_id: deck_who_has_been_used_by_all_users.id,
+        user_count: 2,
+        card_count: 0,
+      },
     ]);
   });
 });

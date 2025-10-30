@@ -17,12 +17,18 @@ import { DecksDeleteDeckHandler } from '@/modules/decks/handlers/decks_delete_de
 import { DecksDuplicateDeckHandler } from '@/modules/decks/handlers/decks_duplicate_deck_handler/decks_duplicate_deck_handler';
 import { DecksUpsertCardsHandler } from '@/modules/decks/handlers/decks_upsert_cards_handler/decks_upsert_cards_handler';
 import { DecksGetDecksDto } from '@/modules/decks/dtos/decks_get_decks_dto';
-import { DecksGetDeckByIdDto } from '@/modules/decks/dtos/decks_get_deck_by_id_dto';
+import {
+  DecksGetDeckByIdDto,
+  DecksGetDeckByIdOutputDto,
+} from '@/modules/decks/dtos/decks_get_deck_by_id_dto';
 import { DecksCreateDeckDto } from '@/modules/decks/dtos/decks_create_deck_dto';
 import { DecksUpdateDeckDto } from '@/modules/decks/dtos/decks_update_deck_dto';
 import { DecksDeleteDeckDto } from '@/modules/decks/dtos/decks_delete_deck_dto';
 import { DecksDuplicateDeckDto } from '@/modules/decks/dtos/decks_duplicate_deck_dto';
-import { DecksSearchDecksDto } from '@/modules/decks/dtos/decks_search_decks_dto';
+import {
+  DecksSearchDecksDto,
+  DecksSearchDecksOutputDto,
+} from '@/modules/decks/dtos/decks_search_decks_dto';
 import { DecksUpsertCardsDto } from '@/modules/decks/dtos/decks_upsert_cards_dto';
 import {
   DecksEntity,
@@ -57,7 +63,7 @@ export class DecksController {
   @ApiOperation({ summary: 'Get a deck by ID' })
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ type: DecksEntity })
+  @ApiOkResponse({ type: DecksGetDeckByIdOutputDto })
   @Post('/get_deck_by_id')
   async get_deck_by_id(
     @Body() body: DecksGetDeckByIdDto,
@@ -70,14 +76,14 @@ export class DecksController {
   }
 
   @ApiOperation({ summary: 'Search public decks' })
-  @ApiOkResponse({ type: [DecksEntity] })
+  @ApiOkResponse({ type: DecksSearchDecksOutputDto })
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Post('/search_decks')
   async search_decks(
     @Body() body: DecksSearchDecksDto,
     @User() user: UsersEntity,
-  ) {
+  ): Promise<DecksSearchDecksOutputDto> {
     return this.search_decks_handler.execute({
       user_id: user.id,
       ...body,

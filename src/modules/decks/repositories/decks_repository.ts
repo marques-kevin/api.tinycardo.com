@@ -17,8 +17,8 @@ export type DecksSearchResult = {
 
 export abstract class DecksRepository extends BaseRepository<DecksEntity> {
   abstract search(params: DecksSearchParams): Promise<DecksSearchResult>;
-  abstract refresh_decks_user_count(): Promise<void>;
+  abstract refresh_decks_stats(): Promise<void>;
   abstract get_decks_stats(params: {
     deck_ids: string[];
-  }): Promise<{ deck_id: string; user_count: number }[]>;
+  }): Promise<{ deck_id: string; user_count: number; card_count: number }[]>;
 }
