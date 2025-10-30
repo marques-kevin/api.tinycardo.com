@@ -21,7 +21,9 @@ export class DecksRepositoryPostgres
     super();
   }
 
-  async search(params: DecksSearchParams): Promise<DecksSearchResult> {
+  async search(
+    params: Parameters<DecksRepository['search']>[0],
+  ): ReturnType<DecksRepository['search']> {
     const {
       limit,
       page,
@@ -57,5 +59,37 @@ export class DecksRepositoryPostgres
     const [decks, total] = await qb.getManyAndCount();
 
     return { decks, total };
+  }
+
+  async refresh_decks_user_count(): ReturnType<
+    DecksRepository['refresh_decks_user_count']
+  > {
+    await this.repository.query('REFRESH MATERIALIZED VIEW decks_user_count');
+  }
+
+  async get_decks_stats(
+    params: Parameters<DecksRepository['get_decks_stats']>[0],
+  ): ReturnType<DecksRepository['get_decks_stats']> {
+    if (!params.deck_ids || params.deck_ids.length === 0) {
+      return [];
+    }
+
+    const rows = await this.repository.query(
+      `
+        SELECT deck_id, user_count
+        FROM decks_user_count
+        WHERE deck_id = ANY($1::varchar[])
+      `,
+      [params.deck_ids],
+    );
+
+    const rows_parsed: { deck_id: string; user_count: number }[] = rows.map(
+      (row: { deck_id: string; user_count: number }) => ({
+        deck_id: row.deck_id,
+        user_count: Number(row.user_count),
+      }),
+    );
+
+    return rows_parsed;
   }
 }

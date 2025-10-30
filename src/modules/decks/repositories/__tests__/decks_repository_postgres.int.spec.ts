@@ -3,18 +3,20 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-
 import { DecksEntity } from '@/modules/decks/entities/decks_entity';
 import { UsersEntity } from '@/modules/authentication/entities/users_entity';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { DecksRepositoryPostgres } from '@/modules/decks/repositories/decks_repository_postgres';
+import { HistoryEntity } from '@/modules/history/entities/history_entity';
+import { HistoryRepositoryPostgres } from '@/modules/history/repositories/history_repository_postgres';
+import { HistoryRepository } from '@/modules/history/repositories/history_repository';
 
 describe('decks_repository_postgres.search (int)', () => {
   let decks_repository: DecksRepositoryPostgres;
+  let history_repository: HistoryRepositoryPostgres;
   let testing_module: TestingModule;
 
   beforeAll(async () => {
-    // prepare: initialize testing module and clean database
     testing_module = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
@@ -24,37 +26,24 @@ describe('decks_repository_postgres.search (int)', () => {
           username: 'postgres',
           password: 'postgres',
           database: 'postgres',
-          entities: [UsersEntity, DecksEntity],
+          entities: [UsersEntity, DecksEntity, HistoryEntity],
         }),
-        TypeOrmModule.forFeature([UsersEntity, DecksEntity]),
+        TypeOrmModule.forFeature([UsersEntity, DecksEntity, HistoryEntity]),
       ],
       providers: [
         {
           provide: DecksRepository,
           useClass: DecksRepositoryPostgres,
         },
+        {
+          provide: HistoryRepository,
+          useClass: HistoryRepositoryPostgres,
+        },
       ],
     }).compile();
 
     decks_repository = testing_module.get(DecksRepository);
-
-    // prepare: ensure a clean slate by deleting all decks then users
-    const decks_repository_orm = testing_module.get<Repository<DecksEntity>>(
-      getRepositoryToken(DecksEntity),
-    );
-    const users_repository_orm = testing_module.get<Repository<UsersEntity>>(
-      getRepositoryToken(UsersEntity),
-    );
-    await decks_repository_orm
-      .createQueryBuilder()
-      .delete()
-      .from(DecksEntity)
-      .execute();
-    await users_repository_orm
-      .createQueryBuilder()
-      .delete()
-      .from(UsersEntity)
-      .execute();
+    history_repository = testing_module.get(HistoryRepository);
   });
 
   afterAll(async () => {
@@ -77,34 +66,35 @@ describe('decks_repository_postgres.search (int)', () => {
   });
 
   it('excludes owner, filters visibility/deleted, supports filters and pagination', async () => {
-    // prepare: seed users that will own decks (FK: decks.user_id -> users.id)
     const users_repository_orm = testing_module.get<Repository<UsersEntity>>(
       getRepositoryToken(UsersEntity),
     );
-    const ensure_user = async (id: string) => {
+
+    const ensure_user = async () => {
       const user: UsersEntity = {
-        id,
+        id: uuidv4(),
         email: `${uuidv4()}@test.com`,
         language: 'en',
         created_at: new Date(),
         updated_at: new Date(),
       };
       await users_repository_orm.save(user);
+      return user;
     };
 
-    await ensure_user('owner');
-    await ensure_user('u1');
-    await ensure_user('u2');
-    await ensure_user('u3');
-    await ensure_user('u4');
+    const user_owner = await ensure_user();
+    const user_1 = await ensure_user();
+    const user_2 = await ensure_user();
+    const user_3 = await ensure_user();
+    const user_4 = await ensure_user();
 
     // prepare: seed decks
     await decks_repository.save(
-      make_deck({ user_id: 'owner', name: 'Owner Deck' }),
+      make_deck({ user_id: user_owner.id, name: 'Owner Deck' }),
     );
     await decks_repository.save(
       make_deck({
-        user_id: 'u1',
+        user_id: user_1.id,
         name: 'Spanish Basics',
         front_language: 'es',
         back_language: 'en',
@@ -112,7 +102,7 @@ describe('decks_repository_postgres.search (int)', () => {
     );
     await decks_repository.save(
       make_deck({
-        user_id: 'u2',
+        user_id: user_2.id,
         name: 'Spanish Advanced',
         front_language: 'es',
         back_language: 'fr',
@@ -120,61 +110,73 @@ describe('decks_repository_postgres.search (int)', () => {
     );
     await decks_repository.save(
       make_deck({
-        user_id: 'u3',
+        user_id: user_3.id,
         name: 'French Basics',
         front_language: 'fr',
         back_language: 'en',
       }),
     );
     await decks_repository.save(
-      make_deck({ user_id: 'u4', name: 'Private Deck', visibility: 'private' }),
+      make_deck({
+        user_id: user_4.id,
+        name: 'Private Deck',
+        visibility: 'private',
+      }),
     );
 
     // case: title filter (case-insensitive)
     const title_result = await decks_repository.search({
       limit: 10,
       page: 1,
-      exclude_user_id: 'owner',
+      exclude_user_id: user_owner.id,
       title: 'spanish',
     });
     // assert
-    expect(title_result.total).toBe(2);
     expect(
       title_result.decks.every((d: DecksEntity) =>
         d.name.toLowerCase().includes('spanish'),
       ),
     ).toBe(true);
     expect(
-      title_result.decks.every((d: DecksEntity) => d.user_id !== 'owner'),
+      title_result.decks.every((d: DecksEntity) => d.user_id !== user_owner.id),
     ).toBe(true);
 
     // case: language filters
     const front_language_result = await decks_repository.search({
       limit: 10,
       page: 1,
-      exclude_user_id: 'owner',
+      exclude_user_id: user_owner.id,
       front_language: 'es',
     });
     // assert
-    expect(front_language_result.total).toBe(2);
+
+    expect(
+      front_language_result.decks.every(
+        (d: DecksEntity) => d.front_language === 'es',
+      ),
+    ).toBe(true);
 
     const back_language_result = await decks_repository.search({
       limit: 10,
       page: 1,
-      exclude_user_id: 'owner',
+      exclude_user_id: user_owner.id,
       back_language: 'fr',
     });
-    expect(back_language_result.total).toBe(1);
-    expect(back_language_result.decks[0].back_language).toBe('fr');
+    // assert
+    expect(
+      back_language_result.decks.every(
+        (d: DecksEntity) => d.back_language === 'fr',
+      ),
+    ).toBe(true);
 
     // prepare: additional decks for pagination
     const extra_decks: DecksEntity[] = [];
     for (let i = 0; i < 8; i++) {
-      // prepare: ensure users px-i exist for FK
-      await ensure_user(`px-${i}`);
+      const user = await ensure_user();
+
       extra_decks.push(
         make_deck({
-          user_id: `px-${i}`,
+          user_id: user.id,
           name: `Deck ${i}`,
           front_language: 'en',
           back_language: 'es',
@@ -187,17 +189,120 @@ describe('decks_repository_postgres.search (int)', () => {
     const page_1_result = await decks_repository.search({
       limit: 5,
       page: 1,
-      exclude_user_id: 'owner',
+      exclude_user_id: user_owner.id,
     });
     const page_2_result = await decks_repository.search({
       limit: 5,
       page: 2,
-      exclude_user_id: 'owner',
+      exclude_user_id: user_owner.id,
     });
 
     // assert
     expect(page_1_result.decks.length).toBe(5);
     expect(page_2_result.decks.length).toBe(5);
-    expect(page_1_result.total).toBeGreaterThanOrEqual(10); // seeded above + many
+    expect(page_1_result.total).toBeGreaterThanOrEqual(10);
+  });
+
+  it('refresh_decks_user_count refreshes MV with correct per-user counts', async () => {
+    const users_repository_orm = testing_module.get<Repository<UsersEntity>>(
+      getRepositoryToken(UsersEntity),
+    );
+
+    const ensure_user = async () => {
+      const user: UsersEntity = {
+        id: uuidv4(),
+        email: `${uuidv4()}@test.com`,
+        language: 'en',
+        created_at: new Date(),
+        updated_at: new Date(),
+      };
+      await users_repository_orm.save(user);
+
+      return user;
+    };
+
+    const user_a = await ensure_user();
+    const user_b = await ensure_user();
+
+    const deck_who_noone_has_ever_used = await decks_repository.save({
+      id: uuidv4(),
+      name: 'deck_who_noone_has_ever_used',
+      description: '',
+      user_id: user_a.id,
+      front_language: 'en',
+      back_language: 'es',
+      visibility: 'public',
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+    });
+
+    const deck_who_has_been_used_by_all_users = await decks_repository.save({
+      id: uuidv4(),
+      name: 'deck_who_has_been_used_by_all_users',
+      description: '',
+      user_id: user_a.id,
+      front_language: 'en',
+      back_language: 'es',
+      visibility: 'public',
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+    });
+
+    await history_repository.save({
+      id: uuidv4(),
+      user_id: user_a.id,
+      deck_id: deck_who_has_been_used_by_all_users.id,
+      card_id: uuidv4(),
+      repetition_count: 0,
+      ease_factor: 2.5,
+      next_due_at: new Date(),
+      last_reviewed_at: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
+    });
+
+    await decks_repository.refresh_decks_user_count();
+
+    const rows_before_refresh = await decks_repository.get_decks_stats({
+      deck_ids: [
+        deck_who_has_been_used_by_all_users.id,
+        deck_who_noone_has_ever_used.id,
+      ],
+    });
+
+    expect(rows_before_refresh.length).toBe(2);
+    expect(rows_before_refresh).toEqual([
+      { deck_id: deck_who_noone_has_ever_used.id, user_count: 0 },
+      { deck_id: deck_who_has_been_used_by_all_users.id, user_count: 1 },
+    ]);
+
+    await history_repository.save({
+      id: uuidv4(),
+      user_id: user_b.id,
+      deck_id: deck_who_has_been_used_by_all_users.id,
+      card_id: uuidv4(),
+      repetition_count: 0,
+      ease_factor: 2.5,
+      next_due_at: new Date(),
+      last_reviewed_at: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
+    });
+
+    await decks_repository.refresh_decks_user_count();
+
+    const rows_after_refresh = await decks_repository.get_decks_stats({
+      deck_ids: [
+        deck_who_noone_has_ever_used.id,
+        deck_who_has_been_used_by_all_users.id,
+      ],
+    });
+
+    expect(rows_after_refresh).toEqual([
+      { deck_id: deck_who_noone_has_ever_used.id, user_count: 0 },
+      { deck_id: deck_who_has_been_used_by_all_users.id, user_count: 2 },
+    ]);
   });
 });

@@ -1,16 +1,14 @@
 import { BaseRepositoryInMemory } from '@/modules/global/repositories/base_repository_in_memory';
-import {
-  DecksRepository,
-  DecksSearchParams,
-  DecksSearchResult,
-} from '@/modules/decks/repositories/decks_repository';
+import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { DecksEntity } from '@/modules/decks/entities/decks_entity';
 
 export class DecksRepositoryInMemory
   extends BaseRepositoryInMemory<DecksEntity>
   implements DecksRepository
 {
-  async search(params: DecksSearchParams): Promise<DecksSearchResult> {
+  async search(
+    params: Parameters<DecksRepository['search']>[0],
+  ): ReturnType<DecksRepository['search']> {
     const {
       limit,
       page,
@@ -49,5 +47,22 @@ export class DecksRepositoryInMemory
     const decks = results.slice(skip, skip + limit);
 
     return { decks, total };
+  }
+
+  async refresh_decks_user_count(): Promise<void> {}
+
+  async get_decks_stats(
+    params: Parameters<DecksRepository['get_decks_stats']>[0],
+  ): ReturnType<DecksRepository['get_decks_stats']> {
+    const decks = await this.find_all({
+      where: {
+        id: params.deck_ids,
+      },
+    });
+
+    return decks.map((deck) => ({
+      deck_id: deck.id,
+      user_count: 0,
+    }));
   }
 }

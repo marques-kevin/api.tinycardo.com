@@ -11,8 +11,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { get_database_config } from '@/config/get_database_config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-@Module({
-  imports: [
+export function get_app_imports() {
+  return [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
@@ -40,7 +40,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       ...history_module.entities,
       ...streak_module.entities,
     ]),
-  ],
+  ];
+}
+
+@Module({
+  imports: [...get_app_imports()],
   controllers: [
     ...authentication_module.controllers,
     ...cards_module.controllers,

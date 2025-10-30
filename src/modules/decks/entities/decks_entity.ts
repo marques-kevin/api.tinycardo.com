@@ -73,4 +73,7 @@ export class DecksEntityWithStats extends DecksEntity {
 
   @ApiProperty({ description: 'Number of cards not ready to be reviewed' })
   number_of_cards_not_ready_to_be_reviewed: number;
+
+  @ApiProperty({ description: 'Number of users who have used the deck' })
+  number_of_users_who_use_the_deck: number;
 }
