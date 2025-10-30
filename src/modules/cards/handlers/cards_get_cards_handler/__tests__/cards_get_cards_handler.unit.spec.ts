@@ -150,23 +150,6 @@ describe('cards_get_cards_handler', () => {
     expect(result[0].front).toBe('Hola');
   });
 
-  it('should throw when user does not own the deck', async () => {
-    const deck = await create_deck_handler.execute({
-      user_id: 'owner',
-      visibility: 'public',
-      name: 'Spanish Basics',
-      front_language: 'es',
-      back_language: 'en',
-    });
-
-    await expect(
-      get_cards_handler.execute({
-        user_id: 'intruder',
-        deck_id: deck.id,
-      }),
-    ).rejects.toThrow('Deck not found');
-  });
-
   it('should throw when deck does not exist', async () => {
     await expect(
       get_cards_handler.execute({

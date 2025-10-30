@@ -40,7 +40,6 @@ describe('decks_search_decks_handler', () => {
     expect(result.total).toBe(2);
     expect(result.page).toBe(1);
     expect(result.limit).toBe(10);
-    expect(result.total_pages).toBe(1);
   });
 
   it('should filter by front_language', async () => {
@@ -204,7 +203,6 @@ describe('decks_search_decks_handler', () => {
     expect(page1.total).toBe(15);
     expect(page1.page).toBe(1);
     expect(page1.limit).toBe(5);
-    expect(page1.total_pages).toBe(3);
 
     // Page 2 with limit 5
     const page2 = await search_handler.execute({
@@ -216,7 +214,6 @@ describe('decks_search_decks_handler', () => {
     expect(page2.decks.length).toBe(5);
     expect(page2.total).toBe(15);
     expect(page2.page).toBe(2);
-    expect(page2.total_pages).toBe(3);
 
     // Page 3 with limit 5
     const page3 = await search_handler.execute({
@@ -228,7 +225,6 @@ describe('decks_search_decks_handler', () => {
     expect(page3.decks.length).toBe(5);
     expect(page3.total).toBe(15);
     expect(page3.page).toBe(3);
-    expect(page3.total_pages).toBe(3);
 
     // Verify no overlap
     const page1_ids = page1.decks.map((d) => d.id);
@@ -250,7 +246,6 @@ describe('decks_search_decks_handler', () => {
     expect(result.total).toBe(0);
     expect(result.page).toBe(1);
     expect(result.limit).toBe(10);
-    expect(result.total_pages).toBe(0);
   });
 
   it('should use default limit of 10 when limit is 0 or negative', async () => {

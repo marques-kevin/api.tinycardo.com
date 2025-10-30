@@ -1,5 +1,7 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+import { DecksEntityWithStats } from '@/modules/decks/entities/decks_entity';
 
 export const DecksSearchDecksSchema = z.object({
   limit: z
@@ -31,3 +33,17 @@ export const DecksSearchDecksSchema = z.object({
 });
 
 export class DecksSearchDecksDto extends createZodDto(DecksSearchDecksSchema) {}
+
+export class DecksSearchDecksOutputDto {
+  @ApiProperty({ type: [DecksEntityWithStats] })
+  decks: DecksEntityWithStats[];
+
+  @ApiProperty({ type: Number })
+  total: number;
+
+  @ApiProperty({ type: Number })
+  page: number;
+
+  @ApiProperty({ type: Number })
+  limit: number;
+}

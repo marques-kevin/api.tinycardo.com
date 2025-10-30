@@ -135,6 +135,7 @@ export class DecksGetDecksHandler
         number_of_cards,
         number_of_cards_ready_to_be_reviewed: history_summary.due,
         number_of_cards_not_ready_to_be_reviewed: history_summary.not_due,
+        number_of_users_who_use_the_deck: 0,
       });
     }
     return results;
