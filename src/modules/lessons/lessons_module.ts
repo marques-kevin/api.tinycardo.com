@@ -7,6 +7,8 @@ import { LessonsCreateLessonHandler } from '@/modules/lessons/handlers/lessons_c
 import { LessonsUpdateLessonHandler } from '@/modules/lessons/handlers/lessons_update_lesson_handler/lessons_update_lesson_handler';
 import { LessonsDeleteLessonHandler } from '@/modules/lessons/handlers/lessons_delete_lesson_handler/lessons_delete_lesson_handler';
 import { LessonsGetLessonHandler } from '@/modules/lessons/handlers/lessons_get_lesson_handler/lessons_get_lesson_handler';
+import { LessonsReorderLessonsHandler } from '@/modules/lessons/handlers/lessons_reorder_lessons_handler/lessons_reorder_lessons_handler';
+import { LessonsGetLessonsHandler } from '@/modules/lessons/handlers/lessons_get_lessons_handler/lessons_get_lessons_handler';
 
 export const lessons_module = {
   entities: [LessonEntity],
@@ -16,6 +18,8 @@ export const lessons_module = {
     LessonsUpdateLessonHandler,
     LessonsDeleteLessonHandler,
     LessonsGetLessonHandler,
+    LessonsReorderLessonsHandler,
+    LessonsGetLessonsHandler,
   ],
   repositories: [
     {
