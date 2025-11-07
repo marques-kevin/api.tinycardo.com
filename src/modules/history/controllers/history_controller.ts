@@ -23,7 +23,7 @@ export class HistoryController {
   ) {}
 
   @ApiOperation({ summary: 'Review cards (mark as known or unknown)' })
-  @ApiOkResponse({ type: [HistoryEntity] })
+  @ApiOkResponse({ type: HistoryEntity })
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Post('/review')
