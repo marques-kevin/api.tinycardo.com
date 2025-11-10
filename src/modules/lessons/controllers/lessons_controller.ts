@@ -9,13 +9,12 @@ import { JwtAuthGuard } from '@/modules/authentication/guards/jwt.guard';
 import { User } from '@/modules/authentication/decorators/user_decorator';
 import { UsersEntity } from '@/modules/authentication/entities/users_entity';
 import { LessonsCreateLessonHandler } from '@/modules/lessons/handlers/lessons_create_lesson_handler/lessons_create_lesson_handler';
-import { LessonsUpdateLessonHandler } from '@/modules/lessons/handlers/lessons_update_lesson_handler/lessons_update_lesson_handler';
+import { LessonsUpsertLessonsHandler } from '@/modules/lessons/handlers/lessons_upsert_lessons_handler/lessons_upsert_lessons_handler';
 import { LessonsDeleteLessonHandler } from '@/modules/lessons/handlers/lessons_delete_lesson_handler/lessons_delete_lesson_handler';
 import { LessonsGetLessonHandler } from '@/modules/lessons/handlers/lessons_get_lesson_handler/lessons_get_lesson_handler';
 import { LessonsReorderLessonsHandler } from '@/modules/lessons/handlers/lessons_reorder_lessons_handler/lessons_reorder_lessons_handler';
 import { LessonsGetLessonsHandler } from '@/modules/lessons/handlers/lessons_get_lessons_handler/lessons_get_lessons_handler';
 import { LessonsCreateLessonDto } from '@/modules/lessons/dtos/lessons_create_lesson_dto';
-import { LessonsUpdateLessonDto } from '@/modules/lessons/dtos/lessons_update_lesson_dto';
 import { LessonsDeleteLessonDto } from '@/modules/lessons/dtos/lessons_delete_lesson_dto';
 import {
   LessonsReorderLessonsDto,
@@ -29,6 +28,8 @@ import {
   LessonsGetLessonsDto,
   LessonsGetLessonsOutputDto,
 } from '@/modules/lessons/dtos/lessons_get_lessons_dto';
+import { LessonsUpsertLessonsDto } from '@/modules/lessons/dtos/lessons_upsert_lessons_dto';
+import { LessonsUpsertLessonsOutputDto } from '@/modules/lessons/dtos/lessons_upsert_lessons_output_dto';
 import { LessonEntity } from '@/modules/lessons/entities/lesson_entity';
 
 @ApiTags('Lessons')
@@ -36,7 +37,7 @@ import { LessonEntity } from '@/modules/lessons/entities/lesson_entity';
 export class LessonsController {
   constructor(
     private readonly create_lesson_handler: LessonsCreateLessonHandler,
-    private readonly update_lesson_handler: LessonsUpdateLessonHandler,
+    private readonly upsert_lessons_handler: LessonsUpsertLessonsHandler,
     private readonly delete_lesson_handler: LessonsDeleteLessonHandler,
     private readonly get_lesson_handler: LessonsGetLessonHandler,
     private readonly reorder_lessons_handler: LessonsReorderLessonsHandler,
@@ -58,16 +59,16 @@ export class LessonsController {
     });
   }
 
-  @ApiOperation({ summary: 'Update a lesson' })
-  @ApiOkResponse({ type: LessonEntity })
+  @ApiOperation({ summary: 'Upsert lessons in a deck' })
+  @ApiOkResponse({ type: LessonsUpsertLessonsOutputDto })
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
-  @Post('/update_lesson')
-  async update_lesson(
+  @Post('/upsert_lessons')
+  async upsert_lessons(
     @User() user: UsersEntity,
-    @Body() body: LessonsUpdateLessonDto,
-  ) {
-    return this.update_lesson_handler.execute({
+    @Body() body: LessonsUpsertLessonsDto,
+  ): Promise<LessonsUpsertLessonsOutputDto> {
+    return this.upsert_lessons_handler.execute({
       user_id: user.id,
       ...body,
     });

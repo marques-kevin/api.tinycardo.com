@@ -145,5 +145,3 @@ describe('lessons_get_lessons_handler', () => {
     ).rejects.toThrow('Deck not found');
   });
 });
-
-

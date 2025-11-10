@@ -2,14 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { CardsEntity } from '@/modules/cards/entities/cards_entity';
-import { v4 } from 'uuid';
 
 type decks_dtos = {
   upsert_cards: {
     input: {
       user_id: string;
       deck_id: string;
-      cards: Array<{ id?: string; front: string; back: string }>;
+      cards: Array<{ id: string; front: string; back: string }>;
     };
     output: { cards_saved: number; cards_removed: number };
   };
@@ -55,7 +54,7 @@ export class DecksUpsertCardsHandler
       const existing = existing_cards.find((c) => c.id === card.id);
 
       const card_to_save: CardsEntity = {
-        id: existing ? existing.id : v4(),
+        id: existing ? existing.id : card.id,
         deck_id: params.deck_id,
         front: card.front,
         back: card.back,

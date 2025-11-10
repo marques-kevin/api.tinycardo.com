@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { CardsEntity } from '@/modules/cards/entities/cards_entity';

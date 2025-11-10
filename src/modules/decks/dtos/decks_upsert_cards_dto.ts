@@ -6,7 +6,7 @@ export const DecksUpsertCardsSchema = z.object({
   cards: z
     .array(
       z.object({
-        id: z.string().optional().describe('ID of existing card (for update)'),
+        id: z.string().describe('ID of existing card (for update)'),
         front: z
           .string()
           .min(1)

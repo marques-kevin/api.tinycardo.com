@@ -7,14 +7,12 @@ import { v4 } from 'uuid';
 
 describe('cards_get_cards_handler', () => {
   let get_cards_handler: CardsGetCardsHandler;
-  let create_deck_handler: DecksCreateDeckHandler;
   let cards_repository: CardsRepository;
   let decks_repository: DecksRepository;
 
   beforeEach(async () => {
     const module = await create_testing_module();
     get_cards_handler = module.get(CardsGetCardsHandler);
-    create_deck_handler = module.get(DecksCreateDeckHandler);
     cards_repository = module.get(CardsRepository);
     decks_repository = module.get(DecksRepository);
   });

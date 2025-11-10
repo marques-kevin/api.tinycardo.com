@@ -18,5 +18,5 @@ export class ChangeHistoryIdColumnsToVarchar1759832000000
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(): Promise<void> {}
 }

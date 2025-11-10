@@ -8,4 +8,3 @@ export const LessonsDeleteLessonSchema = z.object({
 export class LessonsDeleteLessonDto extends createZodDto(
   LessonsDeleteLessonSchema,
 ) {}
-

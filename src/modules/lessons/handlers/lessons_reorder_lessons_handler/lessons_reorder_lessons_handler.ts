@@ -65,7 +65,9 @@ export class LessonsReorderLessonsHandler
     });
 
     // Validate that all lesson_ids in reorder_data belong to this deck
-    const reorder_lesson_ids = params.reorder_data.map((item) => item.lesson_id);
+    const reorder_lesson_ids = params.reorder_data.map(
+      (item) => item.lesson_id,
+    );
     const missing_lessons = reorder_lesson_ids.filter(
       (lesson_id) => !all_lessons.find((lesson) => lesson.id === lesson_id),
     );
@@ -97,9 +99,7 @@ export class LessonsReorderLessonsHandler
 
     // Update all lessons with their new positions
     for (const reorder_item of params.reorder_data) {
-      const lesson = all_lessons.find(
-        (l) => l.id === reorder_item.lesson_id,
-      )!;
+      const lesson = all_lessons.find((l) => l.id === reorder_item.lesson_id)!;
 
       await this.lessons_repository.save({
         ...lesson,
@@ -118,4 +118,3 @@ export class LessonsReorderLessonsHandler
     };
   }
 }
-

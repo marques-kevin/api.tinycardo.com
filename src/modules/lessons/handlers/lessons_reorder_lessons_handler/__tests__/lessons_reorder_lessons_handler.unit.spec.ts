@@ -177,14 +177,6 @@ describe('lessons_reorder_lessons_handler', () => {
       cards: [],
     });
 
-    const lesson2 = await create_lesson_handler.execute({
-      user_id,
-      name: 'Lesson 2',
-      deck_id: deck.id,
-      position: 1,
-      cards: [],
-    });
-
     await expect(
       handler.execute({
         user_id,
@@ -264,4 +256,3 @@ describe('lessons_reorder_lessons_handler', () => {
     ).rejects.toThrow('Deck not found');
   });
 });
-

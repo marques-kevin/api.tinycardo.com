@@ -3,19 +3,14 @@ import { z } from 'zod';
 
 export const LessonsUpdateLessonSchema = z.object({
   id: z.string().describe('ID of the lesson to update'),
-  name: z
+  deck_id: z
     .string()
-    .min(1)
-    .max(255)
-    .describe('New name for the lesson')
-    .optional(),
-  position: z
-    .number()
-    .int()
-    .min(0)
-    .describe('New position for the lesson')
-    .optional(),
-  cards: z.array(z.string()).describe('New array of card IDs').optional(),
+    .describe(
+      'ID of the deck the lesson belongs to. Required when creating a new lesson.',
+    ),
+  name: z.string().min(1).max(255).describe('New name for the lesson'),
+  position: z.number().int().min(0).describe('New position for the lesson'),
+  cards: z.array(z.string()).describe('New array of card IDs'),
 });
 
 export class LessonsUpdateLessonDto extends createZodDto(

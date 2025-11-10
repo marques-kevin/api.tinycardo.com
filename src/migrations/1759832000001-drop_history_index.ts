@@ -9,5 +9,5 @@ export class DropHistoryIndex1759832000001 implements MigrationInterface {
     await queryRunner.query(`DROP INDEX "IDX_history_user_id"`);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(): Promise<void> {}
 }

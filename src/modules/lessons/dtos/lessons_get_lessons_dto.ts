@@ -15,5 +15,3 @@ export class LessonsGetLessonsOutputDto {
   @ApiProperty({ type: [LessonEntity] })
   lessons: LessonEntity[];
 }
-
-

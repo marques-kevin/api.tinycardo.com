@@ -3,13 +3,11 @@ import { LessonsGetLessonHandler } from '@/modules/lessons/handlers/lessons_get_
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
 import { LessonsCreateLessonHandler } from '@/modules/lessons/handlers/lessons_create_lesson_handler/lessons_create_lesson_handler';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
-import { LessonsDeleteLessonHandler } from '@/modules/lessons/handlers/lessons_delete_lesson_handler/lessons_delete_lesson_handler';
 
 describe('lessons_get_lesson_handler', () => {
   let get_lesson_handler: LessonsGetLessonHandler;
   let create_lesson_handler: LessonsCreateLessonHandler;
   let create_deck_handler: DecksCreateDeckHandler;
-  let delete_lesson_handler: LessonsDeleteLessonHandler;
   let decks_repository: DecksRepository;
 
   beforeEach(async () => {
@@ -17,7 +15,6 @@ describe('lessons_get_lesson_handler', () => {
     get_lesson_handler = module.get(LessonsGetLessonHandler);
     create_lesson_handler = module.get(LessonsCreateLessonHandler);
     create_deck_handler = module.get(DecksCreateDeckHandler);
-    delete_lesson_handler = module.get(LessonsDeleteLessonHandler);
     decks_repository = module.get(DecksRepository);
   });
 

@@ -2,6 +2,7 @@ import { create_testing_module } from '@/tests/create_testing_module';
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
 import { DecksUpsertCardsHandler } from '@/modules/decks/handlers/decks_upsert_cards_handler/decks_upsert_cards_handler';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
+import { v4 } from 'uuid';
 
 describe('decks_upsert_cards_handler', () => {
   let create_deck: DecksCreateDeckHandler;
@@ -33,8 +34,8 @@ describe('decks_upsert_cards_handler', () => {
       user_id,
       deck_id: deck.id,
       cards: [
-        { front: 'hola', back: 'hello' },
-        { front: 'adios', back: 'bye' },
+        { id: v4(), front: 'hola', back: 'hello' },
+        { id: v4(), front: 'adios', back: 'bye' },
       ],
     });
 
@@ -62,8 +63,8 @@ describe('decks_upsert_cards_handler', () => {
       user_id,
       deck_id: deck.id,
       cards: [
-        { front: 'hola', back: 'hello' },
-        { front: 'gracias', back: 'thanks' },
+        { id: v4(), front: 'hola', back: 'hello' },
+        { id: v4(), front: 'gracias', back: 'thanks' },
       ],
     });
     expect(first.cards_saved).toBe(2);
@@ -78,7 +79,7 @@ describe('decks_upsert_cards_handler', () => {
       deck_id: deck.id,
       cards: [
         { id: existing[0].id, front: 'hola!', back: 'hello!' },
-        { front: 'adios', back: 'bye' },
+        { id: v4(), front: 'adios', back: 'bye' },
       ],
     });
 
@@ -106,7 +107,7 @@ describe('decks_upsert_cards_handler', () => {
       upsert_cards.execute({
         user_id: 'intruder',
         deck_id: deck.id,
-        cards: [{ front: 'x', back: 'y' }],
+        cards: [{ id: v4(), front: 'x', back: 'y' }],
       }),
     ).rejects.toThrow('Deck not found');
   });
