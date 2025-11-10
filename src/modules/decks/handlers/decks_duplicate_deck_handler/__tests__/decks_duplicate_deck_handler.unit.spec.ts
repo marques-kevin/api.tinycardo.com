@@ -5,6 +5,7 @@ import { DecksDeleteDeckHandler } from '@/modules/decks/handlers/decks_delete_de
 import { DecksUpsertCardsHandler } from '@/modules/decks/handlers/decks_upsert_cards_handler/decks_upsert_cards_handler';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
+import { v4 } from 'uuid';
 
 describe('decks_duplicate_deck_handler', () => {
   let duplicate_handler: DecksDuplicateDeckHandler;
@@ -75,9 +76,9 @@ describe('decks_duplicate_deck_handler', () => {
       user_id: original_user_id,
       deck_id: original_deck.id,
       cards: [
-        { front: 'Hola', back: 'Hello' },
-        { front: 'Adiós', back: 'Goodbye' },
-        { front: 'Gracias', back: 'Thank you' },
+        { id: v4(), front: 'Hola', back: 'Hello' },
+        { id: v4(), front: 'Adiós', back: 'Goodbye' },
+        { id: v4(), front: 'Gracias', back: 'Thank you' },
       ],
     });
 

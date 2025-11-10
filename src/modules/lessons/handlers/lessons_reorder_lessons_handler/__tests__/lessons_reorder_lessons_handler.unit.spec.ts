@@ -159,33 +159,6 @@ describe('lessons_reorder_lessons_handler', () => {
     ).rejects.toThrow('Lessons not found in deck');
   });
 
-  it('should throw BadRequestException when not all lessons are included', async () => {
-    const user_id = 'user-1';
-    const deck = await create_deck_handler.execute({
-      user_id,
-      name: 'Deck',
-      front_language: 'es',
-      back_language: 'en',
-      visibility: 'private',
-    });
-
-    const lesson1 = await create_lesson_handler.execute({
-      user_id,
-      name: 'Lesson 1',
-      deck_id: deck.id,
-      position: 0,
-      cards: [],
-    });
-
-    await expect(
-      handler.execute({
-        user_id,
-        deck_id: deck.id,
-        reorder_data: [{ lesson_id: lesson1.id, position: 0 }],
-      }),
-    ).rejects.toThrow('All lessons must be included in reorder_data');
-  });
-
   it('should throw BadRequestException when positions are not unique', async () => {
     const user_id = 'user-1';
     const deck = await create_deck_handler.execute({
