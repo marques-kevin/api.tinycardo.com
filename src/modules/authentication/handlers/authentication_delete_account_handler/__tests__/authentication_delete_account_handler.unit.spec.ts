@@ -5,6 +5,7 @@ import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
 import { DecksUpsertCardsHandler } from '@/modules/decks/handlers/decks_upsert_cards_handler/decks_upsert_cards_handler';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
+import { v4 } from 'uuid';
 
 describe('authentication_delete_account_handler', () => {
   let delete_account_handler: AuthenticationDeleteAccountHandler;
@@ -150,9 +151,9 @@ describe('authentication_delete_account_handler', () => {
       user_id: user.id,
       deck_id: deck.id,
       cards: [
-        { front: 'Hola', back: 'Hello' },
-        { front: 'Adiós', back: 'Goodbye' },
-        { front: 'Gracias', back: 'Thank you' },
+        { id: v4(), front: 'Hola', back: 'Hello' },
+        { id: v4(), front: 'Adiós', back: 'Goodbye' },
+        { id: v4(), front: 'Gracias', back: 'Thank you' },
       ],
     });
 

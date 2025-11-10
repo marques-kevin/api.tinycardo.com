@@ -6,6 +6,7 @@ import { sessions_module } from '@/modules/sessions/sessions_module';
 import { history_module } from '@/modules/history/history_module';
 import { health_module } from '@/modules/health/health_module';
 import { streak_module } from '@/modules/streak/streak_module';
+import { lessons_module } from '@/modules/lessons/lessons_module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { get_database_config } from '@/config/get_database_config';
@@ -30,6 +31,7 @@ export function get_app_imports() {
           ...decks_module.entities,
           ...history_module.entities,
           ...streak_module.entities,
+          ...lessons_module.entities,
         ],
       });
     }),
@@ -39,6 +41,7 @@ export function get_app_imports() {
       ...decks_module.entities,
       ...history_module.entities,
       ...streak_module.entities,
+      ...lessons_module.entities,
     ]),
   ];
 }
@@ -52,6 +55,7 @@ export function get_app_controllers() {
     ...sessions_module.controllers,
     ...health_module.controllers,
     ...streak_module.controllers,
+    ...lessons_module.controllers,
   ];
 }
 
@@ -70,6 +74,8 @@ export function get_app_providers() {
     ...sessions_module.handlers,
     ...streak_module.repositories,
     ...streak_module.handlers,
+    ...lessons_module.repositories,
+    ...lessons_module.handlers,
   ];
 }
 

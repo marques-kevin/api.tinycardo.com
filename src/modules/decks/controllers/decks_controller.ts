@@ -16,7 +16,6 @@ import { DecksUpdateDeckHandler } from '@/modules/decks/handlers/decks_update_de
 import { DecksDeleteDeckHandler } from '@/modules/decks/handlers/decks_delete_deck_handler/decks_delete_deck_handler';
 import { DecksDuplicateDeckHandler } from '@/modules/decks/handlers/decks_duplicate_deck_handler/decks_duplicate_deck_handler';
 import { DecksUpsertCardsHandler } from '@/modules/decks/handlers/decks_upsert_cards_handler/decks_upsert_cards_handler';
-import { DecksGetDecksDto } from '@/modules/decks/dtos/decks_get_decks_dto';
 import {
   DecksGetDeckByIdDto,
   DecksGetDeckByIdOutputDto,

@@ -5,6 +5,7 @@ import { decks_module_for_tests } from '@/modules/decks/decks_module';
 import { sessions_module_for_tests } from '@/modules/sessions/sessions_module';
 import { history_module_for_tests } from '@/modules/history/history_module';
 import { streak_module_for_tests } from '@/modules/streak/streak_module';
+import { lessons_module_for_tests } from '@/modules/lessons/lessons_module';
 import { UsersRepository } from '@/modules/authentication/repositories/users_repository';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
@@ -36,6 +37,8 @@ export async function create_testing_module() {
       ...sessions_module_for_tests.services,
       ...streak_module_for_tests.repositories,
       ...streak_module_for_tests.handlers,
+      ...lessons_module_for_tests.repositories,
+      ...lessons_module_for_tests.handlers,
     ],
   }).compile();
 

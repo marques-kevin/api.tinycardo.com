@@ -1,20 +1,17 @@
 import { create_testing_module } from '@/tests/create_testing_module';
 import { CardsGetCardsHandler } from '@/modules/cards/handlers/cards_get_cards_handler/cards_get_cards_handler';
-import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { v4 } from 'uuid';
 
 describe('cards_get_cards_handler', () => {
   let get_cards_handler: CardsGetCardsHandler;
-  let create_deck_handler: DecksCreateDeckHandler;
   let cards_repository: CardsRepository;
   let decks_repository: DecksRepository;
 
   beforeEach(async () => {
     const module = await create_testing_module();
     get_cards_handler = module.get(CardsGetCardsHandler);
-    create_deck_handler = module.get(DecksCreateDeckHandler);
     cards_repository = module.get(CardsRepository);
     decks_repository = module.get(DecksRepository);
   });
