@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { CardsEntity } from '@/modules/cards/entities/cards_entity';
+import { QueueService } from '@/modules/global/services/queue_service/queue_service';
 
 type decks_dtos = {
   upsert_cards: {
@@ -25,6 +26,7 @@ export class DecksUpsertCardsHandler
   constructor(
     private readonly decks_repository: DecksRepository,
     private readonly cards_repository: CardsRepository,
+    private readonly queue_service: QueueService,
   ) {}
 
   private async does_user_have_access_to_deck(
@@ -77,6 +79,25 @@ export class DecksUpsertCardsHandler
 
     for (const card of cards_to_remove) {
       await this.cards_repository.delete(card.id);
+    }
+
+    if (cards_to_save.length > 0) {
+      await this.queue_service.addBulk(
+        cards_to_save.map((card) => ({
+          name: 'tts',
+          data: { card_id: card.id },
+          opts: {
+            removeOnComplete: {
+              count: 100,
+              age: 7 * 24 * 60 * 60 * 1000,
+            },
+            removeOnFail: {
+              count: 50,
+              age: 3 * 24 * 60 * 60 * 1000,
+            },
+          },
+        })),
+      );
     }
 
     return {

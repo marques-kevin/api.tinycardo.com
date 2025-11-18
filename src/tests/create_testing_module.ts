@@ -10,6 +10,7 @@ import { UsersRepository } from '@/modules/authentication/repositories/users_rep
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { UsersRepositoryInMemory } from '@/modules/authentication/repositories/users_repository_in_memory';
+import { global_module_for_tests } from '@/modules/global/global_module';
 
 export async function create_testing_module() {
   const module = await Test.createTestingModule({
@@ -24,6 +25,7 @@ export async function create_testing_module() {
       }),
     ],
     providers: [
+      ...global_module_for_tests.services,
       ...authentication_module_for_tests.repositories,
       ...authentication_module_for_tests.handlers,
       ...authentication_module_for_tests.services,

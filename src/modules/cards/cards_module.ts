@@ -4,11 +4,17 @@ import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
 import { CardsRepositoryPostgres } from '@/modules/cards/repositories/cards_repository_postgres';
 import { CardsRepositoryInMemory } from '@/modules/cards/repositories/cards_repository_in_memory';
 import { CardsGetCardsHandler } from '@/modules/cards/handlers/cards_get_cards_handler/cards_get_cards_handler';
+import { CardsTextToSpeechHandler } from '@/modules/cards/handlers/cards_text_to_speech_handler/cards_text_to_speech_handler';
+import { CardsTextToSpeechQueueHandler } from '@/modules/cards/handlers/cards_text_to_speech_queue_handler/cards_text_to_speech_queue_handler';
 
 export const cards_module = {
   entities: [CardsEntity],
   controllers: [CardsController],
-  handlers: [CardsGetCardsHandler],
+  handlers: [
+    CardsGetCardsHandler,
+    CardsTextToSpeechHandler,
+    CardsTextToSpeechQueueHandler,
+  ],
   repositories: [
     {
       provide: CardsRepository,

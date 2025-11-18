@@ -11,6 +11,9 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { get_database_config } from '@/config/get_database_config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BullModule } from '@nestjs/bullmq';
+import { GLOBAL_QUEUES_CONSTANTS } from '@/modules/global/constants/global_queues_contants';
+import { global_module } from '@/modules/global/global_module';
 
 export function get_app_imports() {
   return [
@@ -21,6 +24,17 @@ export function get_app_imports() {
     JwtModule.register({
       secret: process.env.JWT_SECRET as string,
       signOptions: { expiresIn: '7d' },
+    }),
+    BullModule.forRoot({
+      connection: {
+        host: process.env.REDIS_HOST!,
+        port: parseInt(process.env.REDIS_PORT!, 10),
+        password: process.env.REDIS_PASSWORD!,
+        username: process.env.REDIS_USERNAME!,
+      },
+    }),
+    BullModule.registerQueue({
+      name: GLOBAL_QUEUES_CONSTANTS['text_to_speech'],
     }),
     ...get_database_config().map((config) => {
       return TypeOrmModule.forRoot({
@@ -61,6 +75,7 @@ export function get_app_controllers() {
 
 export function get_app_providers() {
   return [
+    ...global_module.services,
     ...authentication_module.repositories,
     ...authentication_module.services,
     ...authentication_module.handlers,

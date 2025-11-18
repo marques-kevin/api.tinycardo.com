@@ -13,11 +13,19 @@ import {
   CardsGetCardsDtoInput,
   CardsGetCardsDtoOutput,
 } from '@/modules/cards/dtos/cards_get_cards_dto';
+import { CardsTextToSpeechHandler } from '@/modules/cards/handlers/cards_text_to_speech_handler/cards_text_to_speech_handler';
+import {
+  CardsTextToSpeechDtoInput,
+  CardsTextToSpeechDtoOutput,
+} from '@/modules/cards/dtos/cards_text_to_speech_dto';
 
 @ApiTags('Cards')
 @Controller('/cards')
 export class CardsController {
-  constructor(private readonly get_cards_handler: CardsGetCardsHandler) {}
+  constructor(
+    private readonly get_cards_handler: CardsGetCardsHandler,
+    private readonly text_to_speech_handler: CardsTextToSpeechHandler,
+  ) {}
 
   @ApiOperation({ summary: 'Get all cards for a deck' })
   @ApiOkResponse({ type: CardsGetCardsDtoOutput })
@@ -31,6 +39,15 @@ export class CardsController {
     return this.get_cards_handler.execute({
       user_id: user.id,
       deck_id: body.deck_id,
+    });
+  }
+
+  @ApiOperation({ summary: 'Test: Generate TTS for a card' })
+  @ApiOkResponse({ type: CardsTextToSpeechDtoOutput })
+  @Post('/test_text_to_speech')
+  async test_text_to_speech(@Body() body: CardsTextToSpeechDtoInput) {
+    return this.text_to_speech_handler.execute({
+      card_id: body.card_id,
     });
   }
 }
