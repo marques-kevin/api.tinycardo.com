@@ -11,6 +11,10 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { get_database_config } from '@/config/get_database_config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TextToSpeechService } from '@/modules/global/services/text_to_speech_service/text_to_speech_service';
+import { TextToSpeechServiceGemini } from '@/modules/global/services/text_to_speech_service/text_to_speech_service_gemini';
+import { CloudflareService } from '@/modules/global/services/cloudflare_service/cloudflare_service';
+import { CloudflareServiceApi } from '@/modules/global/services/cloudflare_service/cloudflare_service_api';
 
 export function get_app_imports() {
   return [
@@ -76,6 +80,14 @@ export function get_app_providers() {
     ...streak_module.handlers,
     ...lessons_module.repositories,
     ...lessons_module.handlers,
+    {
+      provide: TextToSpeechService,
+      useClass: TextToSpeechServiceGemini,
+    },
+    {
+      provide: CloudflareService,
+      useClass: CloudflareServiceApi,
+    },
   ];
 }
 

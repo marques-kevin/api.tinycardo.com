@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.50",
+    "@google/genai": "^1.30.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
@@ -69,6 +70,7 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.27",
+    "wav": "^1.0.2",
     "zod": "^4.1.12"
   },
   "devDependencies": {
