@@ -18,7 +18,6 @@ export const LessonsUpsertLessonsSchema = z.object({
           .describe('Array of card IDs associated with the lesson'),
       }),
     )
-    .min(1)
     .describe('Array of lessons to upsert'),
 });
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CloudflareService } from '@/modules/global/services/cloudflare_service/cloudflare_service';
+import { StorageService } from '@/modules/global/services/storage_service/storage_service';
 
 @Injectable()
-export class CloudflareServiceInMemory extends CloudflareService {
+export class StorageServiceInMemory extends StorageService {
   private readonly uploaded_files = new Set<string>();
 
   async upload_audio(params: {
@@ -12,7 +12,7 @@ export class CloudflareServiceInMemory extends CloudflareService {
     // Track uploaded files for testing
     this.uploaded_files.add(params.filename);
     return {
-      url: `https://mock-cloudflare-url.com/audio/${params.filename}`,
+      url: `https://mock-storage-url.com/audio/${params.filename}`,
     };
   }
 
@@ -24,9 +24,8 @@ export class CloudflareServiceInMemory extends CloudflareService {
     return {
       exists,
       url: exists
-        ? `https://mock-cloudflare-url.com/audio/${params.filename}`
+        ? `https://mock-storage-url.com/audio/${params.filename}`
         : undefined,
     };
   }
 }
-

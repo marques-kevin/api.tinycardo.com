@@ -6,4 +6,3 @@ export abstract class TextToSpeechService {
     audio: Buffer;
   }>;
 }
-

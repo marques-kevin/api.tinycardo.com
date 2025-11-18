@@ -44,7 +44,9 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.50",
+    "@aws-sdk/client-s3": "^3.933.0",
     "@google/genai": "^1.30.0",
+    "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
@@ -57,6 +59,7 @@
     "@types/passport-jwt": "^4.0.1",
     "ai": "^5.0.68",
     "axios": "^1.12.2",
+    "bullmq": "^5.63.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "dotenv": "^17.2.3",

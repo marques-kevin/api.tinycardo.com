@@ -11,10 +11,13 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { get_database_config } from '@/config/get_database_config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BullModule } from '@nestjs/bullmq';
 import { TextToSpeechService } from '@/modules/global/services/text_to_speech_service/text_to_speech_service';
 import { TextToSpeechServiceGemini } from '@/modules/global/services/text_to_speech_service/text_to_speech_service_gemini';
-import { CloudflareService } from '@/modules/global/services/cloudflare_service/cloudflare_service';
-import { CloudflareServiceApi } from '@/modules/global/services/cloudflare_service/cloudflare_service_api';
+import { StorageService } from '@/modules/global/services/storage_service/storage_service';
+import { StorageServiceS3 } from '@/modules/global/services/storage_service/storage_service_s3';
+import { CARDS_TEXT_TO_SPEECH_QUEUE } from '@/modules/cards/handlers/cards_text_to_speech_cron_handler/cards_text_to_speech_cron_handler';
+import { CardsTextToSpeechQueueService } from '@/modules/cards/services/cards_text_to_speech_queue_service';
 
 export function get_app_imports() {
   return [
@@ -25,6 +28,14 @@ export function get_app_imports() {
     JwtModule.register({
       secret: process.env.JWT_SECRET as string,
       signOptions: { expiresIn: '7d' },
+    }),
+    BullModule.forRoot({
+      connection: {
+        url: process.env.REDIS_URL!,
+      },
+    }),
+    BullModule.registerQueue({
+      name: CARDS_TEXT_TO_SPEECH_QUEUE,
     }),
     ...get_database_config().map((config) => {
       return TypeOrmModule.forRoot({
@@ -70,6 +81,7 @@ export function get_app_providers() {
     ...authentication_module.handlers,
     ...cards_module.repositories,
     ...cards_module.handlers,
+    ...cards_module.services,
     ...decks_module.repositories,
     ...decks_module.handlers,
     ...history_module.repositories,
@@ -85,9 +97,10 @@ export function get_app_providers() {
       useClass: TextToSpeechServiceGemini,
     },
     {
-      provide: CloudflareService,
-      useClass: CloudflareServiceApi,
+      provide: StorageService,
+      useClass: StorageServiceS3,
     },
+    CardsTextToSpeechQueueService,
   ];
 }
 

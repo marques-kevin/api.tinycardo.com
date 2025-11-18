@@ -12,8 +12,8 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersRepositoryInMemory } from '@/modules/authentication/repositories/users_repository_in_memory';
 import { TextToSpeechService } from '@/modules/global/services/text_to_speech_service/text_to_speech_service';
 import { TextToSpeechServiceInMemory } from '@/modules/global/services/text_to_speech_service/text_to_speech_service_in_memory';
-import { CloudflareService } from '@/modules/global/services/cloudflare_service/cloudflare_service';
-import { CloudflareServiceInMemory } from '@/modules/global/services/cloudflare_service/cloudflare_service_in_memory';
+import { StorageService } from '@/modules/global/services/storage_service/storage_service';
+import { StorageServiceInMemory } from '@/modules/global/services/storage_service/storage_service_in_memory';
 
 export async function create_testing_module() {
   const module = await Test.createTestingModule({
@@ -48,8 +48,8 @@ export async function create_testing_module() {
         useClass: TextToSpeechServiceInMemory,
       },
       {
-        provide: CloudflareService,
-        useClass: CloudflareServiceInMemory,
+        provide: StorageService,
+        useClass: StorageServiceInMemory,
       },
     ],
   }).compile();
