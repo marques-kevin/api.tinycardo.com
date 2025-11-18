@@ -20,7 +20,6 @@ export class StorageServiceS3 extends StorageService {
     const access_key_id = process.env.S3_ACCESS_KEY_ID as string;
     const secret_access_key = process.env.S3_SECRET_ACCESS_KEY as string;
     this.bucket_name = process.env.S3_BUCKET_NAME as string;
-    this.public_url = process.env.S3_PUBLIC_URL as string;
 
     if (
       !endpoint ||
@@ -89,9 +88,7 @@ export class StorageServiceS3 extends StorageService {
       await this.s3_client.send(command);
 
       return {
-        url: this.public_url
-          ? `${this.public_url}/${params.filename}`
-          : `${process.env.S3_ENDPOINT}/${this.bucket_name}/${params.filename}`,
+        url: `${process.env.S3_ENDPOINT}/${this.bucket_name}/${params.filename}`,
       };
     } catch (error) {
       console.error('Error uploading audio to S3:', error);

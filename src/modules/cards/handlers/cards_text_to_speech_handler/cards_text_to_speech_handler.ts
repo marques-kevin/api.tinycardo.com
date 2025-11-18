@@ -88,7 +88,7 @@ export class CardsTextToSpeechHandler
     );
 
     const hash = createHash('sha256').update(params.text).digest('hex');
-    const filename = `/${params.language}/${hash}.wav`;
+    const filename = `tts/${params.language}/${hash}.wav`;
 
     const exists_result = await this.storage_service.file_exists({
       filename,

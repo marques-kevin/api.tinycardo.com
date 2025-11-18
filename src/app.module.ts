@@ -12,12 +12,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { get_database_config } from '@/config/get_database_config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bullmq';
-import { TextToSpeechService } from '@/modules/global/services/text_to_speech_service/text_to_speech_service';
-import { TextToSpeechServiceGemini } from '@/modules/global/services/text_to_speech_service/text_to_speech_service_gemini';
-import { StorageService } from '@/modules/global/services/storage_service/storage_service';
-import { StorageServiceS3 } from '@/modules/global/services/storage_service/storage_service_s3';
-import { CARDS_TEXT_TO_SPEECH_QUEUE } from '@/modules/cards/handlers/cards_text_to_speech_cron_handler/cards_text_to_speech_cron_handler';
-import { CardsTextToSpeechQueueService } from '@/modules/cards/services/cards_text_to_speech_queue_service';
+import { GLOBAL_QUEUES_CONSTANTS } from '@/modules/global/constants/global_queues_contants';
+import { global_module } from '@/modules/global/global_module';
 
 export function get_app_imports() {
   return [
@@ -36,7 +32,7 @@ export function get_app_imports() {
       },
     }),
     BullModule.registerQueue({
-      name: CARDS_TEXT_TO_SPEECH_QUEUE,
+      name: GLOBAL_QUEUES_CONSTANTS['text_to_speech'],
     }),
     ...get_database_config().map((config) => {
       return TypeOrmModule.forRoot({
@@ -77,12 +73,12 @@ export function get_app_controllers() {
 
 export function get_app_providers() {
   return [
+    ...global_module.services,
     ...authentication_module.repositories,
     ...authentication_module.services,
     ...authentication_module.handlers,
     ...cards_module.repositories,
     ...cards_module.handlers,
-    ...cards_module.services,
     ...decks_module.repositories,
     ...decks_module.handlers,
     ...history_module.repositories,
@@ -93,15 +89,6 @@ export function get_app_providers() {
     ...streak_module.handlers,
     ...lessons_module.repositories,
     ...lessons_module.handlers,
-    {
-      provide: TextToSpeechService,
-      useClass: TextToSpeechServiceGemini,
-    },
-    {
-      provide: StorageService,
-      useClass: StorageServiceS3,
-    },
-    CardsTextToSpeechQueueService,
   ];
 }
 
