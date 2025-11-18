@@ -6,7 +6,9 @@ import { CardsTextToSpeechDtoInput } from '@/modules/cards/dtos/cards_text_to_sp
 
 export const CARDS_TEXT_TO_SPEECH_QUEUE = 'cards_text_to_speech';
 
-@Processor(CARDS_TEXT_TO_SPEECH_QUEUE)
+@Processor(CARDS_TEXT_TO_SPEECH_QUEUE, {
+  concurrency: 1,
+})
 @Injectable()
 export class CardsTextToSpeechCronHandler extends WorkerHost {
   constructor(
@@ -15,10 +17,12 @@ export class CardsTextToSpeechCronHandler extends WorkerHost {
     super();
   }
 
-  async process(job: Job<CardsTextToSpeechDtoInput>): Promise<void> {
+  async process(job: Job<CardsTextToSpeechDtoInput>) {
     const { card_id } = job.data;
 
-    await this.cards_text_to_speech_handler.execute({
+    console.log('Processing card:', card_id);
+
+    return this.cards_text_to_speech_handler.execute({
       card_id,
     });
   }

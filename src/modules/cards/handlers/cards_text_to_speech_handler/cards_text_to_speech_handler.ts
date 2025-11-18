@@ -87,11 +87,6 @@ export class CardsTextToSpeechHandler
       params.language,
     );
 
-    const audio = await this.text_to_speech_service.synthesize_speech({
-      text: params.text,
-      language: language_with_country_code,
-    });
-
     const hash = createHash('sha256').update(params.text).digest('hex');
     const filename = `/${params.language}/${hash}.wav`;
 
@@ -102,6 +97,11 @@ export class CardsTextToSpeechHandler
     if (exists_result.exists) {
       return exists_result.url as string;
     }
+
+    const audio = await this.text_to_speech_service.synthesize_speech({
+      text: params.text,
+      language: language_with_country_code,
+    });
 
     const upload_result = await this.storage_service.upload_audio({
       audio: audio.audio,

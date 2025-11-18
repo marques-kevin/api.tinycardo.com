@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { CardsEntity } from '@/modules/cards/entities/cards_entity';
+import { CardsTextToSpeechQueueService } from '@/modules/cards/services/cards_text_to_speech_queue_service';
 
 type decks_dtos = {
   upsert_cards: {
@@ -25,6 +26,7 @@ export class DecksUpsertCardsHandler
   constructor(
     private readonly decks_repository: DecksRepository,
     private readonly cards_repository: CardsRepository,
+    private readonly cards_text_to_speech_queue_service: CardsTextToSpeechQueueService,
   ) {}
 
   private async does_user_have_access_to_deck(
@@ -77,6 +79,13 @@ export class DecksUpsertCardsHandler
 
     for (const card of cards_to_remove) {
       await this.cards_repository.delete(card.id);
+    }
+
+    // Enqueue TTS jobs for all saved cards (created or updated, not deleted)
+    const card_ids = cards_to_save.map((card) => card.id);
+    if (card_ids.length > 0) {
+      console.log('Enqueuing TTS jobs for cards:', card_ids);
+      await this.cards_text_to_speech_queue_service.enqueue_cards(card_ids);
     }
 
     return {

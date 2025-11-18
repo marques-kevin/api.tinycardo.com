@@ -30,6 +30,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "NODE_ENV=development nest start --watch",
+    "start:cron": "yarn build && NODE_ENV=development node dist/cron.js",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "typecheck": "tsc --noEmit",
     "test": "jest --config ./jest.unit.json --maxWorkers=1",

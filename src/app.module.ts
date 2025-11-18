@@ -31,7 +31,8 @@ export function get_app_imports() {
     }),
     BullModule.forRoot({
       connection: {
-        url: process.env.REDIS_URL!,
+        host: process.env.REDIS_HOST!,
+        port: parseInt(process.env.REDIS_PORT!, 10),
       },
     }),
     BullModule.registerQueue({
