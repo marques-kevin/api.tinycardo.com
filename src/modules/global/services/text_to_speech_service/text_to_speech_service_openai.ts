@@ -24,7 +24,9 @@ export class TextToSpeechServiceOpenAI extends TextToSpeechService {
       model: 'tts-1',
       voice: 'nova', // Options: alloy, echo, fable, onyx, nova, shimmer
       input: params.text,
-      response_format: 'wav',
+      instructions:
+        'Speak clearly and naturally, as you would in a friendly conversation. Make the speech sound authentic and easy to understand, like helping someone learn from a flashcard.',
+      response_format: 'mp3',
     });
 
     const audioBuffer = Buffer.from(await response.arrayBuffer());
