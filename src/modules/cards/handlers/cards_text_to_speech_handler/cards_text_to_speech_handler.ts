@@ -21,69 +21,26 @@ export class CardsTextToSpeechHandler
   ) {}
 
   /**
-   * Maps language codes (e.g., "en", "fr") to BCP 47 format with country codes
-   * that Gemini TTS expects (e.g., "en-US", "fr-FR")
+   * Maps language codes to OpenAI TTS format.
+   * OpenAI TTS uses ISO 639-1 language codes (e.g., "en", "fr", "es").
+   * This function extracts the base language code if a country code is provided.
    */
-  private map_language_code_to_gemini_format(languageCode: string): string {
-    const languageMap: Record<string, string> = {
-      en: 'en-US',
-      fr: 'fr-FR',
-      es: 'es-ES',
-      de: 'de-DE',
-      it: 'it-IT',
-      pt: 'pt-BR',
-      ru: 'ru-RU',
-      ja: 'ja-JP',
-      ko: 'ko-KR',
-      zh: 'zh-CN',
-      ar: 'ar-SA',
-      hi: 'hi-IN',
-      nl: 'nl-NL',
-      pl: 'pl-PL',
-      tr: 'tr-TR',
-      sv: 'sv-SE',
-      da: 'da-DK',
-      no: 'no-NO',
-      fi: 'fi-FI',
-      cs: 'cs-CZ',
-      el: 'el-GR',
-      he: 'he-IL',
-      th: 'th-TH',
-      vi: 'vi-VN',
-      id: 'id-ID',
-      ms: 'ms-MY',
-      uk: 'uk-UA',
-      ro: 'ro-RO',
-      hu: 'hu-HU',
-      bg: 'bg-BG',
-      hr: 'hr-HR',
-      sk: 'sk-SK',
-      sl: 'sl-SI',
-      et: 'et-EE',
-      lv: 'lv-LV',
-      lt: 'lt-LT',
-      ca: 'ca-ES',
-      eu: 'eu-ES',
-      ga: 'ga-IE',
-      cy: 'cy-GB',
-    };
-
+  private map_language_code_to_openai_format(languageCode: string): string {
+    // OpenAI TTS uses ISO 639-1 language codes (e.g., "en", "fr", "es")
+    // Extract the base language code if a country code is provided
     if (languageCode.includes('-')) {
-      return languageCode;
+      return languageCode.split('-')[0].toLowerCase();
     }
 
-    // Convert to lowercase for lookup
-    const normalizedCode = languageCode.toLowerCase();
-
-    // Return mapped code or default to en-US if not found
-    return languageMap[normalizedCode] || 'en-US';
+    // Return lowercase language code, default to 'en' if empty
+    return languageCode.toLowerCase() || 'en';
   }
 
   private async get_or_create_audio_url(params: {
     text: string;
     language: string;
   }): Promise<string> {
-    const language_with_country_code = this.map_language_code_to_gemini_format(
+    const language_code = this.map_language_code_to_openai_format(
       params.language,
     );
 
@@ -100,7 +57,7 @@ export class CardsTextToSpeechHandler
 
     const audio = await this.text_to_speech_service.synthesize_speech({
       text: params.text,
-      language: language_with_country_code,
+      language: language_code,
     });
 
     const upload_result = await this.storage_service.upload_audio({
