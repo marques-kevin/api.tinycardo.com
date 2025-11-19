@@ -90,7 +90,7 @@ describe('decks_delete_deck_handler', () => {
         user_id: 'intruder',
         id: created.id,
       }),
-    ).rejects.toThrow('Deck not found');
+    ).rejects.toThrow('Access denied: You must be the owner of this deck');
 
     const deck = await decks_repository.find_by_id(created.id);
     expect(deck?.deleted_at).toBeNull();

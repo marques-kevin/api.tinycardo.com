@@ -9,6 +9,7 @@ import { DecksUpdateDeckHandler } from '@/modules/decks/handlers/decks_update_de
 import { DecksDeleteDeckHandler } from '@/modules/decks/handlers/decks_delete_deck_handler/decks_delete_deck_handler';
 import { DecksDuplicateDeckHandler } from '@/modules/decks/handlers/decks_duplicate_deck_handler/decks_duplicate_deck_handler';
 import { DecksUpsertCardsHandler } from '@/modules/decks/handlers/decks_upsert_cards_handler/decks_upsert_cards_handler';
+import { DecksCheckAccessHandler } from '@/modules/decks/handlers/decks_check_access_handler/decks_check_access_handler';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { DecksRepositoryPostgres } from '@/modules/decks/repositories/decks_repository_postgres';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
@@ -28,6 +29,7 @@ export const decks_module = {
     DecksDeleteDeckHandler,
     DecksDuplicateDeckHandler,
     DecksUpsertCardsHandler,
+    DecksCheckAccessHandler,
   ],
   repositories: [
     {

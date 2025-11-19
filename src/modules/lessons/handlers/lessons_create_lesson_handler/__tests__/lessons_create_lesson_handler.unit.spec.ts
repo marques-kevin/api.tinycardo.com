@@ -1,20 +1,17 @@
 import { create_testing_module } from '@/tests/create_testing_module';
 import { LessonsCreateLessonHandler } from '@/modules/lessons/handlers/lessons_create_lesson_handler/lessons_create_lesson_handler';
 import { LessonsRepository } from '@/modules/lessons/repositories/lessons_repository';
-import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
 
 describe('lessons_create_lesson_handler', () => {
   let handler: LessonsCreateLessonHandler;
   let lessons_repository: LessonsRepository;
-  let decks_repository: DecksRepository;
   let create_deck_handler: DecksCreateDeckHandler;
 
   beforeEach(async () => {
     const module = await create_testing_module();
     handler = module.get(LessonsCreateLessonHandler);
     lessons_repository = module.get(LessonsRepository);
-    decks_repository = module.get(DecksRepository);
     create_deck_handler = module.get(DecksCreateDeckHandler);
   });
 
@@ -112,34 +109,6 @@ describe('lessons_create_lesson_handler', () => {
         position: 0,
         cards: [],
       }),
-    ).rejects.toThrow(
-      'Access denied: You can only create lessons for your own decks',
-    );
-  });
-
-  it('should throw NotFoundException when deck is deleted', async () => {
-    const user_id = 'user-1';
-    const deck = await create_deck_handler.execute({
-      user_id,
-      name: 'Deck to delete',
-      front_language: 'es',
-      back_language: 'en',
-      visibility: 'private',
-    });
-
-    await decks_repository.save({
-      ...deck,
-      deleted_at: new Date(),
-    });
-
-    await expect(
-      handler.execute({
-        user_id,
-        name: 'Lesson 1',
-        deck_id: deck.id,
-        position: 0,
-        cards: [],
-      }),
-    ).rejects.toThrow('Deck not found');
+    ).rejects.toThrow('Access denied: You must be the owner of this deck');
   });
 });

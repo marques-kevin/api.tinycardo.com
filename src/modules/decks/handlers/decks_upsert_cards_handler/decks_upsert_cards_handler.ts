@@ -29,7 +29,7 @@ export class DecksUpsertCardsHandler
     private readonly queue_service: QueueService,
   ) {}
 
-  private async does_user_have_access_to_deck(
+  private async check_user_is_owner(
     params: decks_dtos['upsert_cards']['input'],
   ) {
     const deck = await this.decks_repository.find_by_id(params.deck_id);
@@ -44,7 +44,8 @@ export class DecksUpsertCardsHandler
   async execute(
     params: decks_dtos['upsert_cards']['input'],
   ): Promise<decks_dtos['upsert_cards']['output']> {
-    await this.does_user_have_access_to_deck(params);
+    await this.check_user_is_owner(params);
+
     const existing_cards = await this.cards_repository.find_all({
       where: { deck_id: params.deck_id },
     });

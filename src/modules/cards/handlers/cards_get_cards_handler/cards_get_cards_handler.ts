@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { LessonsRepository } from '@/modules/lessons/repositories/lessons_repository';
@@ -6,6 +6,7 @@ import {
   CardsGetCardsDtoInput,
   CardsGetCardsDtoOutput,
 } from '@/modules/cards/dtos/cards_get_cards_dto';
+import { DecksCheckAccessHandler } from '@/modules/decks/handlers/decks_check_access_handler/decks_check_access_handler';
 
 @Injectable()
 export class CardsGetCardsHandler
@@ -15,29 +16,17 @@ export class CardsGetCardsHandler
     private readonly cards_repository: CardsRepository,
     private readonly decks_repository: DecksRepository,
     private readonly lessons_repository: LessonsRepository,
+    private readonly decks_check_access_handler: DecksCheckAccessHandler,
   ) {}
-
-  private async does_user_have_access_to_deck(
-    user_id: string,
-    deck_id: string,
-  ) {
-    const deck = await this.decks_repository.find_by_id(deck_id);
-
-    if (!deck) {
-      throw new Error('Deck not found');
-    }
-
-    if (deck.visibility === 'private' && deck.user_id !== user_id) {
-      throw new ForbiddenException('Access denied: This deck is private');
-    }
-
-    return deck;
-  }
 
   async execute(
     params: WithUserId<CardsGetCardsDtoInput>,
   ): Promise<CardsGetCardsDtoOutput> {
-    await this.does_user_have_access_to_deck(params.user_id, params.deck_id);
+    await this.decks_check_access_handler.execute({
+      deck_id: params.deck_id,
+      user_id: params.user_id,
+      level: 'all',
+    });
 
     const [cards, lesson] = await Promise.all([
       this.cards_repository.find_all({
