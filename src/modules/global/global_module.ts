@@ -5,7 +5,7 @@ import { StorageServiceS3 } from '@/modules/global/services/storage_service/stor
 import { QueueServiceInMemory } from '@/modules/global/services/queue_service/queue_service_in_memory';
 import { StorageServiceInMemory } from '@/modules/global/services/storage_service/storage_service_in_memory';
 import { TextToSpeechService } from '@/modules/global/services/text_to_speech_service/text_to_speech_service';
-import { TextToSpeechServiceGemini } from '@/modules/global/services/text_to_speech_service/text_to_speech_service_gemini';
+import { TextToSpeechServiceOpenAI } from '@/modules/global/services/text_to_speech_service/text_to_speech_service_openai';
 import { TextToSpeechServiceInMemory } from '@/modules/global/services/text_to_speech_service/text_to_speech_service_in_memory';
 
 export const global_module = {
@@ -20,7 +20,7 @@ export const global_module = {
     },
     {
       provide: TextToSpeechService,
-      useClass: TextToSpeechServiceGemini,
+      useClass: TextToSpeechServiceOpenAI,
     },
   ],
 };
