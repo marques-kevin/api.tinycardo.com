@@ -45,7 +45,7 @@ export class CardsTextToSpeechHandler
     );
 
     const hash = createHash('sha256').update(params.text).digest('hex');
-    const filename = `tts/${params.language}/${hash}.wav`;
+    const filename = `tts/${params.language}/${hash}.mp3`;
 
     const exists_result = await this.storage_service.file_exists({
       filename,
@@ -63,7 +63,7 @@ export class CardsTextToSpeechHandler
     const upload_result = await this.storage_service.upload_audio({
       audio: audio.audio,
       filename,
-      contentType: 'audio/wav',
+      contentType: 'audio/mpeg',
     });
 
     return upload_result.url;
