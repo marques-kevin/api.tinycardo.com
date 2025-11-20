@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { createHash } from 'crypto';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { TextToSpeechService } from '@/modules/global/services/text_to_speech_service/text_to_speech_service';
 import { StorageService } from '@/modules/global/services/storage_service/storage_service';
+import { CardsGetTtsFilenameHandler } from '@/modules/cards/handlers/cards_get_tts_filename_handler/cards_get_tts_filename_handler';
 import {
   CardsTextToSpeechDtoInput,
   CardsTextToSpeechDtoOutput,
@@ -18,6 +18,7 @@ export class CardsTextToSpeechHandler
     private readonly decks_repository: DecksRepository,
     private readonly text_to_speech_service: TextToSpeechService,
     private readonly storage_service: StorageService,
+    private readonly get_tts_filename_handler: CardsGetTtsFilenameHandler,
   ) {}
 
   /**
@@ -44,8 +45,10 @@ export class CardsTextToSpeechHandler
       params.language,
     );
 
-    const hash = createHash('sha256').update(params.text).digest('hex');
-    const filename = `tts/${params.language}/${hash}.mp3`;
+    const { filename } = this.get_tts_filename_handler.execute({
+      text: params.text,
+      language: params.language,
+    });
 
     const exists_result = await this.storage_service.file_exists({
       filename,

@@ -1,7 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { ApiProperty } from '@nestjs/swagger';
-import { CardsEntity } from '@/modules/cards/entities/cards_entity';
 
 export const CardsGetSignedUrlsSchema = z.object({
   deck_id: z.string().describe('ID of the deck'),
@@ -11,7 +10,10 @@ export class CardsGetSignedUrlsDtoInput extends createZodDto(
   CardsGetSignedUrlsSchema,
 ) {}
 
-export class CardWithSignedUrls extends CardsEntity {
+export class CardWithSignedUrls {
+  @ApiProperty({ description: 'ID of the card' })
+  id: string;
+
   @ApiProperty({
     description: 'Signed URL for the front TTS audio file',
   })
