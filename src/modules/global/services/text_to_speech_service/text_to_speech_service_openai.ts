@@ -13,7 +13,7 @@ export class TextToSpeechServiceOpenAI extends TextToSpeechService {
     });
   }
 
-  private get_voice_for_language(language: string): string {
+  private get_voice_for_language(): string {
     return 'nova';
   }
 
@@ -23,7 +23,7 @@ export class TextToSpeechServiceOpenAI extends TextToSpeechService {
   }): ReturnType<TextToSpeechService['synthesize_speech']> {
     const response = await this.openai.audio.speech.create({
       model: 'gpt-4o-mini-tts',
-      voice: this.get_voice_for_language(params.language), // Options: alloy, echo, fable, onyx, nova, shimmer
+      voice: this.get_voice_for_language(), // Options: alloy, echo, fable, onyx, nova, shimmer
       input: params.text,
       instructions: `Speak in ${params.language} language. Speak clearly and naturally, as you would in a friendly conversation. Make the speech sound authentic. You can speak quickly like in a real conversation.`,
       response_format: 'mp3',

@@ -143,7 +143,9 @@ describe('cards_generate_signed_url_handler', () => {
         text: 'Test',
         language: 'en',
       });
-    }).toThrow('CDN_URL and CDN_SIGNATURE_SECRET environment variables are required');
+    }).toThrow(
+      'CDN_URL and CDN_SIGNATURE_SECRET environment variables are required',
+    );
 
     // Restore for other tests
     process.env.CDN_URL = CDN_URL;
@@ -157,7 +159,9 @@ describe('cards_generate_signed_url_handler', () => {
         text: 'Test',
         language: 'en',
       });
-    }).toThrow('CDN_URL and CDN_SIGNATURE_SECRET environment variables are required');
+    }).toThrow(
+      'CDN_URL and CDN_SIGNATURE_SECRET environment variables are required',
+    );
 
     // Restore for other tests
     process.env.CDN_SIGNATURE_SECRET = CDN_SECRET;
@@ -199,4 +203,3 @@ describe('cards_generate_signed_url_handler', () => {
     expect(url.pathname).toContain('tts/fr/');
   });
 });
-

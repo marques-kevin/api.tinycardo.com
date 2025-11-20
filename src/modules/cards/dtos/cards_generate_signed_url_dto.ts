@@ -15,4 +15,3 @@ export class CardsGenerateSignedUrlDtoOutput {
   @ApiProperty({ description: 'Signed URL for the TTS audio file' })
   signed_url: string;
 }
-
