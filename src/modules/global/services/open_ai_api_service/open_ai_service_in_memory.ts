@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { OpenAiService } from '@/modules/sessions/services/open_ai_service';
+import { v4 } from 'uuid';
+import { OpenAiService } from '@/modules/global/services/open_ai_api_service/open_ai_service';
+import { DecksBuilderDto } from '@/modules/decks/dtos/decks_builder_dto';
 
 @Injectable()
 export class OpenAiServiceInMemory extends OpenAiService {
@@ -8,7 +10,6 @@ export class OpenAiServiceInMemory extends OpenAiService {
     language_of_sentence: string;
     language_of_the_explanation: string;
   }): Promise<{ explanation: string }> {
-    // Mock implementation for testing
     return {
       explanation: `# Explanation of "${params.sentence_to_explain}"
 
@@ -30,6 +31,29 @@ This is a mock translation from ${params.language_of_sentence} to ${params.langu
 ## Cultural Notes
 Some cultural context about the sentence.
 `,
+    };
+  }
+
+  async deck_builder(
+    params: Parameters<OpenAiService['deck_builder']>[0],
+  ): ReturnType<OpenAiService['deck_builder']> {
+    const card_to_create: DecksBuilderDto['cards'][number] = {
+      id: v4(),
+      front: 'Front',
+      back: 'Back',
+    };
+
+    const lesson_to_create: DecksBuilderDto['lessons'][number] = {
+      id: v4(),
+      name: 'Lesson 1',
+      position: 1,
+      cards: [card_to_create.id],
+    };
+
+    return {
+      deck: params.deck,
+      cards: [...params.cards, card_to_create],
+      lessons: [...params.lessons, lesson_to_create],
     };
   }
 }

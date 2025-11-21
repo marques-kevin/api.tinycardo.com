@@ -16,6 +16,7 @@ import { DecksUpdateDeckHandler } from '@/modules/decks/handlers/decks_update_de
 import { DecksDeleteDeckHandler } from '@/modules/decks/handlers/decks_delete_deck_handler/decks_delete_deck_handler';
 import { DecksDuplicateDeckHandler } from '@/modules/decks/handlers/decks_duplicate_deck_handler/decks_duplicate_deck_handler';
 import { DecksUpsertCardsHandler } from '@/modules/decks/handlers/decks_upsert_cards_handler/decks_upsert_cards_handler';
+import { DecksBuilderHandler } from '@/modules/decks/handlers/decks_builder_handler/decks_builder_handler';
 import {
   DecksGetDeckByIdDto,
   DecksGetDeckByIdOutputDto,
@@ -29,6 +30,10 @@ import {
   DecksSearchDecksOutputDto,
 } from '@/modules/decks/dtos/decks_search_decks_dto';
 import { DecksUpsertCardsDto } from '@/modules/decks/dtos/decks_upsert_cards_dto';
+import {
+  DecksBuilderDto,
+  DecksBuilderOutputDto,
+} from '@/modules/decks/dtos/decks_builder_dto';
 import {
   DecksEntity,
   DecksEntityWithStats,
@@ -46,6 +51,7 @@ export class DecksController {
     private readonly delete_deck_handler: DecksDeleteDeckHandler,
     private readonly duplicate_deck_handler: DecksDuplicateDeckHandler,
     private readonly upsert_cards_handler: DecksUpsertCardsHandler,
+    private readonly builder_handler: DecksBuilderHandler,
   ) {}
 
   @ApiOperation({ summary: 'Get user decks' })
@@ -158,6 +164,21 @@ export class DecksController {
     @Body() body: DecksUpsertCardsDto,
   ) {
     return this.upsert_cards_handler.execute({
+      user_id: user.id,
+      ...body,
+    });
+  }
+
+  @ApiOperation({ summary: 'Build/update a deck using AI' })
+  @ApiOkResponse({ type: DecksBuilderOutputDto })
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(JwtAuthGuard)
+  @Post('/builder')
+  async builder(
+    @User() user: UsersEntity,
+    @Body() body: DecksBuilderDto,
+  ): Promise<DecksBuilderOutputDto> {
+    return this.builder_handler.execute({
       user_id: user.id,
       ...body,
     });

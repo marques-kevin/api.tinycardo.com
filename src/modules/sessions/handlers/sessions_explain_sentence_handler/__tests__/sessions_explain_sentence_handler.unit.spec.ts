@@ -1,6 +1,6 @@
 import { create_testing_module } from '@/tests/create_testing_module';
 import { SessionsExplainSentenceHandler } from '@/modules/sessions/handlers/sessions_explain_sentence_handler/sessions_explain_sentence_handler';
-import { OpenAiService } from '@/modules/sessions/services/open_ai_service';
+import { OpenAiService } from '@/modules/global/services/open_ai_api_service/open_ai_service';
 
 describe('sessions_explain_sentence_handler', () => {
   let handler: SessionsExplainSentenceHandler;

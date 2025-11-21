@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { OpenAiService } from '@/modules/sessions/services/open_ai_service';
+import { OpenAiService } from '@/modules/global/services/open_ai_api_service/open_ai_service';
 
 type sessions_dtos = {
   explain_sentence: {
