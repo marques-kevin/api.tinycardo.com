@@ -6,6 +6,8 @@ import { CardsRepositoryInMemory } from '@/modules/cards/repositories/cards_repo
 import { CardsGetCardsHandler } from '@/modules/cards/handlers/cards_get_cards_handler/cards_get_cards_handler';
 import { CardsTextToSpeechHandler } from '@/modules/cards/handlers/cards_text_to_speech_handler/cards_text_to_speech_handler';
 import { CardsTextToSpeechQueueHandler } from '@/modules/cards/handlers/cards_text_to_speech_queue_handler/cards_text_to_speech_queue_handler';
+import { CardsGenerateSignedUrlHandler } from '@/modules/cards/handlers/cards_generate_signed_url_handler/cards_generate_signed_url_handler';
+import { CardsGetTtsFilenameHandler } from '@/modules/cards/handlers/cards_get_tts_filename_handler/cards_get_tts_filename_handler';
 
 export const cards_module = {
   entities: [CardsEntity],
@@ -14,6 +16,8 @@ export const cards_module = {
     CardsGetCardsHandler,
     CardsTextToSpeechHandler,
     CardsTextToSpeechQueueHandler,
+    CardsGenerateSignedUrlHandler,
+    CardsGetTtsFilenameHandler,
   ],
   repositories: [
     {

@@ -1,15 +1,10 @@
-import {
-  Injectable,
-  NotFoundException,
-  ForbiddenException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { LessonsRepository } from '@/modules/lessons/repositories/lessons_repository';
-import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import {
   LessonsReorderLessonsDto,
   LessonsReorderLessonsOutputDto,
 } from '@/modules/lessons/dtos/lessons_reorder_lessons_dto';
+import { DecksCheckAccessHandler } from '@/modules/decks/handlers/decks_check_access_handler/decks_check_access_handler';
 
 type lessons_dtos = {
   reorder_lessons: {
@@ -28,36 +23,17 @@ export class LessonsReorderLessonsHandler
 {
   constructor(
     private readonly lessons_repository: LessonsRepository,
-    private readonly decks_repository: DecksRepository,
+    private readonly decks_check_access_handler: DecksCheckAccessHandler,
   ) {}
-
-  private async does_user_have_access_to_deck(
-    user_id: string,
-    deck_id: string,
-  ) {
-    const deck = await this.decks_repository.find_by_id(deck_id);
-
-    if (!deck) {
-      throw new NotFoundException('Deck not found');
-    }
-
-    if (deck.deleted_at) {
-      throw new NotFoundException('Deck not found');
-    }
-
-    if (deck.user_id !== user_id) {
-      throw new ForbiddenException(
-        'Access denied: You can only reorder lessons in your own decks',
-      );
-    }
-
-    return deck;
-  }
 
   async execute(
     params: lessons_dtos['reorder_lessons']['input'],
   ): Promise<lessons_dtos['reorder_lessons']['output']> {
-    await this.does_user_have_access_to_deck(params.user_id, params.deck_id);
+    await this.decks_check_access_handler.execute({
+      deck_id: params.deck_id,
+      user_id: params.user_id,
+      level: 'owner',
+    });
 
     // Get all lessons for this deck
     const all_lessons = await this.lessons_repository.find_all({

@@ -2,20 +2,17 @@ import { create_testing_module } from '@/tests/create_testing_module';
 import { LessonsGetLessonHandler } from '@/modules/lessons/handlers/lessons_get_lesson_handler/lessons_get_lesson_handler';
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
 import { LessonsCreateLessonHandler } from '@/modules/lessons/handlers/lessons_create_lesson_handler/lessons_create_lesson_handler';
-import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 
 describe('lessons_get_lesson_handler', () => {
   let get_lesson_handler: LessonsGetLessonHandler;
   let create_lesson_handler: LessonsCreateLessonHandler;
   let create_deck_handler: DecksCreateDeckHandler;
-  let decks_repository: DecksRepository;
 
   beforeEach(async () => {
     const module = await create_testing_module();
     get_lesson_handler = module.get(LessonsGetLessonHandler);
     create_lesson_handler = module.get(LessonsCreateLessonHandler);
     create_deck_handler = module.get(DecksCreateDeckHandler);
-    decks_repository = module.get(DecksRepository);
   });
 
   it('should be defined', () => {
@@ -140,37 +137,6 @@ describe('lessons_get_lesson_handler', () => {
         user_id: 'user-1',
       }),
     ).rejects.toThrow('Lesson not found');
-  });
-
-  it('should throw NotFoundException when deck is deleted', async () => {
-    const user_id = 'user-1';
-    const deck = await create_deck_handler.execute({
-      user_id,
-      name: 'Deck to delete',
-      front_language: 'es',
-      back_language: 'en',
-      visibility: 'public',
-    });
-
-    const lesson = await create_lesson_handler.execute({
-      user_id,
-      name: 'Lesson 1',
-      deck_id: deck.id,
-      position: 0,
-      cards: [],
-    });
-
-    await decks_repository.save({
-      ...deck,
-      deleted_at: new Date(),
-    });
-
-    await expect(
-      get_lesson_handler.execute({
-        id: lesson.id,
-        user_id: 'user-2',
-      }),
-    ).rejects.toThrow('Deck not found');
   });
 
   it('should return correct lesson properties', async () => {

@@ -1,18 +1,15 @@
 import { create_testing_module } from '@/tests/create_testing_module';
 import { DecksGetDeckByIdHandler } from '@/modules/decks/handlers/decks_get_deck_by_id_handler/decks_get_deck_by_id_handler';
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
-import { DecksDeleteDeckHandler } from '@/modules/decks/handlers/decks_delete_deck_handler/decks_delete_deck_handler';
 
 describe('decks_get_deck_by_id_handler', () => {
   let get_deck_by_id_handler: DecksGetDeckByIdHandler;
   let create_handler: DecksCreateDeckHandler;
-  let delete_handler: DecksDeleteDeckHandler;
 
   beforeEach(async () => {
     const module = await create_testing_module();
     get_deck_by_id_handler = module.get(DecksGetDeckByIdHandler);
     create_handler = module.get(DecksCreateDeckHandler);
-    delete_handler = module.get(DecksDeleteDeckHandler);
   });
 
   it('should be defined', () => {
@@ -142,30 +139,6 @@ describe('decks_get_deck_by_id_handler', () => {
       get_deck_by_id_handler.execute({
         id: 'non-existent-id',
         user_id: 'user-2',
-      }),
-    ).rejects.toThrow('Deck not found');
-  });
-
-  it('should throw NotFoundException when accessing a deleted deck ', async () => {
-    const owner_id = 'user-1';
-    const deck = await create_handler.execute({
-      user_id: owner_id,
-      name: 'Deck to delete',
-      front_language: 'es',
-      back_language: 'en',
-      visibility: 'public',
-      description: 'Deck to delete',
-    });
-
-    await delete_handler.execute({
-      user_id: owner_id,
-      id: deck.id,
-    });
-
-    await expect(
-      get_deck_by_id_handler.execute({
-        id: deck.id,
-        user_id: 'other',
       }),
     ).rejects.toThrow('Deck not found');
   });

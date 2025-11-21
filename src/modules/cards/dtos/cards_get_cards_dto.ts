@@ -1,6 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
-import { CardsEntity } from '@/modules/cards/entities/cards_entity';
+import { CardWithAudioUrls } from '@/modules/cards/entities/cards_entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 export const CardsGetCardsSchema = z.object({
@@ -9,6 +9,6 @@ export const CardsGetCardsSchema = z.object({
 
 export class CardsGetCardsDtoInput extends createZodDto(CardsGetCardsSchema) {}
 export class CardsGetCardsDtoOutput {
-  @ApiProperty({ type: [CardsEntity] })
-  cards: CardsEntity[];
+  @ApiProperty({ type: [CardWithAudioUrls] })
+  cards: CardWithAudioUrls[];
 }

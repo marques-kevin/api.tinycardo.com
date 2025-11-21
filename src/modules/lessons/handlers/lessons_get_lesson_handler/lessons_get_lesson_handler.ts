@@ -1,10 +1,6 @@
-import {
-  Injectable,
-  NotFoundException,
-  ForbiddenException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { LessonsRepository } from '@/modules/lessons/repositories/lessons_repository';
-import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
+import { DecksCheckAccessHandler } from '@/modules/decks/handlers/decks_check_access_handler/decks_check_access_handler';
 import {
   LessonsGetLessonDto,
   LessonsGetLessonOutputDto,
@@ -20,30 +16,8 @@ export class LessonsGetLessonHandler
 {
   constructor(
     private readonly lessons_repository: LessonsRepository,
-    private readonly decks_repository: DecksRepository,
+    private readonly decks_check_access_handler: DecksCheckAccessHandler,
   ) {}
-
-  private async does_user_have_access_to_deck(
-    user_id: string,
-    deck_id: string,
-  ) {
-    const deck = await this.decks_repository.find_by_id(deck_id);
-
-    if (!deck) {
-      throw new NotFoundException('Deck not found');
-    }
-
-    if (deck.deleted_at) {
-      throw new NotFoundException('Deck not found');
-    }
-
-    // Check visibility
-    if (deck.visibility === 'private' && deck.user_id !== user_id) {
-      throw new ForbiddenException('Access denied: This deck is private');
-    }
-
-    return deck;
-  }
 
   async execute(
     params: LessonsGetLessonDto & { user_id: string },
@@ -54,7 +28,11 @@ export class LessonsGetLessonHandler
       throw new NotFoundException('Lesson not found');
     }
 
-    await this.does_user_have_access_to_deck(params.user_id, lesson.deck_id);
+    await this.decks_check_access_handler.execute({
+      deck_id: lesson.deck_id,
+      user_id: params.user_id,
+      level: 'all',
+    });
 
     return { lesson };
   }

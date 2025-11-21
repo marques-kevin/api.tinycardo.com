@@ -33,3 +33,11 @@ export class CardsEntity {
   @UpdateDateColumn()
   updated_at: Date;
 }
+
+export class CardWithAudioUrls extends CardsEntity {
+  @ApiProperty({ description: 'URL of the front audio file' })
+  front_audio_url: string;
+
+  @ApiProperty({ description: 'URL of the back audio file' })
+  back_audio_url: string;
+}
