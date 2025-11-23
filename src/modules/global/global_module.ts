@@ -7,6 +7,9 @@ import { StorageServiceInMemory } from '@/modules/global/services/storage_servic
 import { TextToSpeechService } from '@/modules/global/services/text_to_speech_service/text_to_speech_service';
 import { TextToSpeechServiceOpenAI } from '@/modules/global/services/text_to_speech_service/text_to_speech_service_openai';
 import { TextToSpeechServiceInMemory } from '@/modules/global/services/text_to_speech_service/text_to_speech_service_in_memory';
+import { OpenAiService } from '@/modules/global/services/open_ai_api_service/open_ai_service';
+import { OpenAiServiceApi } from '@/modules/global/services/open_ai_api_service/open_ai_service_api';
+import { OpenAiServiceInMemory } from '@/modules/global/services/open_ai_api_service/open_ai_service_in_memory';
 
 export const global_module = {
   services: [
@@ -21,6 +24,10 @@ export const global_module = {
     {
       provide: TextToSpeechService,
       useClass: TextToSpeechServiceOpenAI,
+    },
+    {
+      provide: OpenAiService,
+      useClass: OpenAiServiceApi,
     },
   ],
 };
@@ -39,6 +46,10 @@ export const global_module_for_tests = {
     {
       provide: TextToSpeechService,
       useClass: TextToSpeechServiceInMemory,
+    },
+    {
+      provide: OpenAiService,
+      useClass: OpenAiServiceInMemory,
     },
   ],
 };

@@ -16,6 +16,8 @@ import { DecksUpdateDeckHandler } from '@/modules/decks/handlers/decks_update_de
 import { DecksDeleteDeckHandler } from '@/modules/decks/handlers/decks_delete_deck_handler/decks_delete_deck_handler';
 import { DecksDuplicateDeckHandler } from '@/modules/decks/handlers/decks_duplicate_deck_handler/decks_duplicate_deck_handler';
 import { DecksUpsertCardsHandler } from '@/modules/decks/handlers/decks_upsert_cards_handler/decks_upsert_cards_handler';
+import { DecksGenerateDescriptionHandler } from '@/modules/decks/handlers/decks_generate_description_handler/decks_generate_description_handler';
+import { DecksTranslateCardWithAiHandler } from '@/modules/decks/handlers/decks_translate_card_with_ai_handler/decks_translate_card_with_ai_handler';
 import {
   DecksGetDeckByIdDto,
   DecksGetDeckByIdOutputDto,
@@ -29,6 +31,14 @@ import {
   DecksSearchDecksOutputDto,
 } from '@/modules/decks/dtos/decks_search_decks_dto';
 import { DecksUpsertCardsDto } from '@/modules/decks/dtos/decks_upsert_cards_dto';
+import {
+  DecksGenerateDescriptionDto,
+  DecksGenerateDescriptionOutputDto,
+} from '@/modules/decks/dtos/decks_generate_description_dto';
+import {
+  DecksTranslateCardWithAiDto,
+  DecksTranslateCardWithAiOutputDto,
+} from '@/modules/decks/dtos/decks_translate_card_with_ai_dto';
 import {
   DecksEntity,
   DecksEntityWithStats,
@@ -46,6 +56,8 @@ export class DecksController {
     private readonly delete_deck_handler: DecksDeleteDeckHandler,
     private readonly duplicate_deck_handler: DecksDuplicateDeckHandler,
     private readonly upsert_cards_handler: DecksUpsertCardsHandler,
+    private readonly generate_description_handler: DecksGenerateDescriptionHandler,
+    private readonly translate_card_with_ai_handler: DecksTranslateCardWithAiHandler,
   ) {}
 
   @ApiOperation({ summary: 'Get user decks' })
@@ -161,5 +173,32 @@ export class DecksController {
       user_id: user.id,
       ...body,
     });
+  }
+
+  @ApiOperation({ summary: 'Generate a deck description using AI' })
+  @ApiOkResponse({ type: DecksGenerateDescriptionOutputDto })
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(JwtAuthGuard)
+  @Post('/generate_description')
+  async generate_description(
+    @User() user: UsersEntity,
+    @Body() body: DecksGenerateDescriptionDto,
+  ): Promise<DecksGenerateDescriptionOutputDto> {
+    return this.generate_description_handler.execute({
+      user_id: user.id,
+      ...body,
+    });
+  }
+
+  @ApiOperation({ summary: 'Translate a card front text using AI' })
+  @ApiOkResponse({ type: DecksTranslateCardWithAiOutputDto })
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(JwtAuthGuard)
+  @Post('/translate_card_with_ai')
+  async translate_card_with_ai(
+    @User() user: UsersEntity,
+    @Body() body: DecksTranslateCardWithAiDto,
+  ): Promise<DecksTranslateCardWithAiOutputDto> {
+    return this.translate_card_with_ai_handler.execute(body);
   }
 }

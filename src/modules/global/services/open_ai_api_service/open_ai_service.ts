@@ -1,0 +1,10 @@
+import { z } from 'zod';
+
+export abstract class OpenAiService {
+  abstract generate<T extends z.ZodTypeAny>(params: {
+    schema: T;
+    system: string;
+    model: 'gpt-4.1-mini' | 'gpt-4.1-nano' | 'gpt-5-mini';
+    prompt: string;
+  }): Promise<z.infer<T>>;
+}
