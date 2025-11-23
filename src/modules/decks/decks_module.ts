@@ -10,7 +10,8 @@ import { DecksDeleteDeckHandler } from '@/modules/decks/handlers/decks_delete_de
 import { DecksDuplicateDeckHandler } from '@/modules/decks/handlers/decks_duplicate_deck_handler/decks_duplicate_deck_handler';
 import { DecksUpsertCardsHandler } from '@/modules/decks/handlers/decks_upsert_cards_handler/decks_upsert_cards_handler';
 import { DecksCheckAccessHandler } from '@/modules/decks/handlers/decks_check_access_handler/decks_check_access_handler';
-import { DecksBuilderHandler } from '@/modules/decks/handlers/decks_builder_handler/decks_builder_handler';
+import { DecksGenerateDescriptionHandler } from '@/modules/decks/handlers/decks_generate_description_handler/decks_generate_description_handler';
+import { DecksTranslateCardWithAiHandler } from '@/modules/decks/handlers/decks_translate_card_with_ai_handler/decks_translate_card_with_ai_handler';
 import { DecksRepository } from '@/modules/decks/repositories/decks_repository';
 import { DecksRepositoryPostgres } from '@/modules/decks/repositories/decks_repository_postgres';
 import { CardsRepository } from '@/modules/cards/repositories/cards_repository';
@@ -31,7 +32,8 @@ export const decks_module = {
     DecksDuplicateDeckHandler,
     DecksUpsertCardsHandler,
     DecksCheckAccessHandler,
-    DecksBuilderHandler,
+    DecksGenerateDescriptionHandler,
+    DecksTranslateCardWithAiHandler,
   ],
   repositories: [
     {

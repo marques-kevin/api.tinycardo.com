@@ -1,22 +1,10 @@
-import { DecksBuilderDto } from '@/modules/decks/dtos/decks_builder_dto';
+import { z } from 'zod';
 
 export abstract class OpenAiService {
-  abstract explain_sentence(params: {
-    sentence_to_explain: string;
-    language_of_sentence: string;
-    language_of_the_explanation: string;
-  }): Promise<{
-    explanation: string;
-  }>;
-
-  abstract deck_builder(params: {
-    deck: DecksBuilderDto['deck'];
-    cards: DecksBuilderDto['cards'];
-    lessons: DecksBuilderDto['lessons'];
+  abstract generate<T extends z.ZodTypeAny>(params: {
+    schema: T;
+    system: string;
+    model: 'gpt-4.1-mini' | 'gpt-4.1-nano' | 'gpt-5-mini';
     prompt: string;
-  }): Promise<{
-    deck: DecksBuilderDto['deck'];
-    cards: DecksBuilderDto['cards'];
-    lessons: DecksBuilderDto['lessons'];
-  }>;
+  }): Promise<z.infer<T>>;
 }
