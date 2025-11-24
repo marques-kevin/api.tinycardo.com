@@ -23,9 +23,9 @@ export class TextToSpeechServiceOpenAI extends TextToSpeechService {
   }): ReturnType<TextToSpeechService['synthesize_speech']> {
     const response = await this.openai.audio.speech.create({
       model: 'gpt-4o-mini-tts',
-      voice: this.get_voice_for_language(), // Options: alloy, echo, fable, onyx, nova, shimmer
+      voice: this.get_voice_for_language(),
       input: params.text,
-      instructions: `Speak in ${params.language} language. Speak clearly and naturally, as you would in a friendly conversation. Make the speech sound authentic. You can speak quickly like in a real conversation.`,
+      instructions: `Speak in ${params.language} language. Speak clearly and naturally, as you would in a friendly conversation. Make the speech sound authentic. You can speak like in a real conversation but a bit more slowly.`,
       response_format: 'mp3',
     });
 

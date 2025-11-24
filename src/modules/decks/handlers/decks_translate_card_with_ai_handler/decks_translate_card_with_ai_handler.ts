@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { OpenAiService } from '@/modules/global/services/open_ai_api_service/open_ai_service';
 import {
   DecksTranslateCardWithAiDto,
   DecksTranslateCardWithAiOutputDto,
 } from '@/modules/decks/dtos/decks_translate_card_with_ai_dto';
 import z from 'zod';
+import { GlobalAiHandler } from '@/modules/global/handlers/global_ai_handler/global_ai_handler';
 
 type Dto = {
   input: DecksTranslateCardWithAiDto;
@@ -15,7 +15,7 @@ type Dto = {
 export class DecksTranslateCardWithAiHandler
   implements Handler<Dto['input'], Dto['output']>
 {
-  constructor(private readonly open_ai_service: OpenAiService) {}
+  constructor(private readonly global_ai_handler: GlobalAiHandler) {}
 
   build_translate_schema(params: {
     front: string;
@@ -54,9 +54,10 @@ export class DecksTranslateCardWithAiHandler
     // TODO: only premium users
     // TODO: rate limit
     // Quota per user
-    const { translation } = await this.open_ai_service.generate(
-      this.build_translate_schema(params),
-    );
+    const { translation } = await this.global_ai_handler.generate({
+      handler_name: 'DecksTranslateCardWithAiHandler',
+      ...this.build_translate_schema(params),
+    });
 
     return {
       front: params.front,

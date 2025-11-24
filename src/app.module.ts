@@ -37,6 +37,7 @@ export function get_app_imports() {
       return TypeOrmModule.forRoot({
         ...config,
         entities: [
+          ...global_module.entities,
           ...authentication_module.entities,
           ...cards_module.entities,
           ...decks_module.entities,
@@ -47,6 +48,7 @@ export function get_app_imports() {
       });
     }),
     TypeOrmModule.forFeature([
+      ...global_module.entities,
       ...authentication_module.entities,
       ...cards_module.entities,
       ...decks_module.entities,
@@ -73,6 +75,7 @@ export function get_app_controllers() {
 export function get_app_providers() {
   return [
     ...global_module.services,
+    ...global_module.handlers,
     ...authentication_module.repositories,
     ...authentication_module.services,
     ...authentication_module.handlers,
