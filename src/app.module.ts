@@ -1,4 +1,4 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { authentication_module } from '@/modules/authentication/authentication_module';
 import { cards_module } from '@/modules/cards/cards_module';
 import { decks_module } from '@/modules/decks/decks_module';
@@ -45,7 +45,7 @@ export function get_app_imports() {
   const log_level = process.env.LOG_LEVEL ?? (is_production ? 'info' : 'debug');
 
   return [
-    SentryModule.forRoot() as DynamicModule,
+    SentryModule.forRoot(),
     LoggerModule.forRoot({
       pinoHttp: {
         level: log_level,
