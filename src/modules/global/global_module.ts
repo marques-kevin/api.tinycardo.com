@@ -10,11 +10,9 @@ import { TextToSpeechServiceInMemory } from '@/modules/global/services/text_to_s
 import { OpenAiService } from '@/modules/global/services/open_ai_api_service/open_ai_service';
 import { OpenAiServiceApi } from '@/modules/global/services/open_ai_api_service/open_ai_service_api';
 import { OpenAiServiceInMemory } from '@/modules/global/services/open_ai_api_service/open_ai_service_in_memory';
-import { GlobalAiHandler } from '@/modules/global/handlers/global_ai_handler/global_ai_handler';
-import { AiRequestsEntity } from '@/modules/global/entities/ai_requests_entity';
 
 export const global_module = {
-  entities: [AiRequestsEntity],
+  entities: [],
   services: [
     {
       provide: QueueService,
@@ -33,7 +31,7 @@ export const global_module = {
       useClass: OpenAiServiceApi,
     },
   ],
-  handlers: [GlobalAiHandler],
+  handlers: [],
 };
 
 export const global_module_for_tests = {

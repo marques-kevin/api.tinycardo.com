@@ -4,7 +4,7 @@ import {
   DecksGenerateDescriptionOutputDto,
 } from '@/modules/decks/dtos/decks_generate_description_dto';
 import z from 'zod';
-import { GlobalAiHandler } from '@/modules/global/handlers/global_ai_handler/global_ai_handler';
+import { AiRequestHandler } from '@/modules/ai/handlers/ai_request_handler/ai_request_handler';
 
 type Dto = {
   input: WithUserId<DecksGenerateDescriptionDto>;
@@ -15,7 +15,7 @@ type Dto = {
 export class DecksGenerateDescriptionHandler
   implements Handler<Dto['input'], Dto['output']>
 {
-  constructor(private readonly global_ai_handler: GlobalAiHandler) {}
+  constructor(private readonly global_ai_handler: AiRequestHandler) {}
 
   build_generate_description_schema(params: {
     name: string;
@@ -51,6 +51,7 @@ export class DecksGenerateDescriptionHandler
     const { description } = await this.global_ai_handler.generate({
       handler_name: 'DecksGenerateDescriptionHandler',
       ...this.build_generate_description_schema(params),
+      user_id: params.user_id,
     });
 
     return {

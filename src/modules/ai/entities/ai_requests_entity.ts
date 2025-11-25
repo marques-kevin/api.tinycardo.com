@@ -10,7 +10,7 @@ type MODELS = 'gpt-4.1-mini' | 'gpt-4.1-nano' | 'gpt-5-mini';
 type STATUS = 'success' | 'error';
 
 @Entity({ name: 'ai_requests' })
-export class AiRequestsEntity {
+export class AiRequestLogEntity {
   @ApiProperty({ description: 'Unique identifier of the AI request' })
   @PrimaryGeneratedColumn('uuid')
   id: string;

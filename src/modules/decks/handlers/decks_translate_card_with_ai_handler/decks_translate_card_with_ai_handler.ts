@@ -4,7 +4,7 @@ import {
   DecksTranslateCardWithAiOutputDto,
 } from '@/modules/decks/dtos/decks_translate_card_with_ai_dto';
 import z from 'zod';
-import { GlobalAiHandler } from '@/modules/global/handlers/global_ai_handler/global_ai_handler';
+import { AiRequestHandler } from '@/modules/ai/handlers/ai_request_handler/ai_request_handler';
 
 type Dto = {
   input: DecksTranslateCardWithAiDto;
@@ -15,7 +15,7 @@ type Dto = {
 export class DecksTranslateCardWithAiHandler
   implements Handler<Dto['input'], Dto['output']>
 {
-  constructor(private readonly global_ai_handler: GlobalAiHandler) {}
+  constructor(private readonly global_ai_handler: AiRequestHandler) {}
 
   build_translate_schema(params: {
     front: string;
@@ -50,13 +50,14 @@ export class DecksTranslateCardWithAiHandler
     };
   }
 
-  async execute(params: Dto['input']): Promise<Dto['output']> {
+  async execute(params: WithUserId<Dto['input']>): Promise<Dto['output']> {
     // TODO: only premium users
     // TODO: rate limit
     // Quota per user
     const { translation } = await this.global_ai_handler.generate({
       handler_name: 'DecksTranslateCardWithAiHandler',
       ...this.build_translate_schema(params),
+      user_id: params.user_id,
     });
 
     return {

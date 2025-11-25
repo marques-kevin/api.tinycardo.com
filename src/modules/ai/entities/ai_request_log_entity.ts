@@ -1,18 +1,13 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 type MODELS = 'gpt-4.1-mini' | 'gpt-4.1-nano' | 'gpt-5-mini';
 type STATUS = 'success' | 'error';
 
 @Entity({ name: 'ai_requests' })
-export class AiRequestsEntity {
+export class AiRequestLogEntity {
   @ApiProperty({ description: 'Unique identifier of the AI request' })
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
 
   @ApiProperty({ description: 'User ID who made the request' })
@@ -37,7 +32,7 @@ export class AiRequestsEntity {
 
   @ApiProperty({ description: 'Estimated cost in USD' })
   @Column({ type: 'decimal', precision: 10, scale: 6 })
-  estimated_cost_usd: number;
+  estimated_cost_usd: string;
 
   @ApiProperty({ description: 'Process duration in milliseconds' })
   @Column({ type: 'int' })

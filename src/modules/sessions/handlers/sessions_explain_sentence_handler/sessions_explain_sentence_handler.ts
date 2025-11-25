@@ -44,12 +44,12 @@ export class SessionsExplainSentenceHandler
     // TODO: only premium users
     // TODO: rate limit
     // Quota per user
-    const result = await this.open_ai_service.generate({
+    const { response } = await this.open_ai_service.generate({
       ...this.generate_params(params),
     });
 
     return {
-      explanation: result.markdown_explanation,
+      explanation: response.markdown_explanation,
     };
   }
 }

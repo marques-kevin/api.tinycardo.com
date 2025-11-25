@@ -7,6 +7,7 @@ import { history_module } from '@/modules/history/history_module';
 import { health_module } from '@/modules/health/health_module';
 import { streak_module } from '@/modules/streak/streak_module';
 import { lessons_module } from '@/modules/lessons/lessons_module';
+import { ai_module } from '@/modules/ai/ai_module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { get_database_config } from '@/config/get_database_config';
@@ -44,6 +45,7 @@ export function get_app_imports() {
           ...history_module.entities,
           ...streak_module.entities,
           ...lessons_module.entities,
+          ...ai_module.entities,
         ],
       });
     }),
@@ -55,6 +57,7 @@ export function get_app_imports() {
       ...history_module.entities,
       ...streak_module.entities,
       ...lessons_module.entities,
+      ...ai_module.entities,
     ]),
   ];
 }
@@ -91,6 +94,8 @@ export function get_app_providers() {
     ...streak_module.handlers,
     ...lessons_module.repositories,
     ...lessons_module.handlers,
+    ...ai_module.repositories,
+    ...ai_module.handlers,
   ];
 }
 

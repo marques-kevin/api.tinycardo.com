@@ -17,7 +17,10 @@ export class OpenAiServiceInMemory extends OpenAiService {
     system: string;
     model: string;
     prompt: string;
-  }): Promise<z.infer<T>> {
+  }): Promise<{
+    response: z.infer<T>;
+    usage: { input_tokens: number; output_tokens: number };
+  }> {
     const response_found = this.generate_responses.find(
       (response) =>
         response.system === params.system &&
@@ -29,6 +32,12 @@ export class OpenAiServiceInMemory extends OpenAiService {
       throw new Error('Response not found');
     }
 
-    return response_found.response as z.infer<T>;
+    return {
+      response: response_found.response as z.infer<T>,
+      usage: {
+        input_tokens: 0,
+        output_tokens: 0,
+      },
+    };
   }
 }
