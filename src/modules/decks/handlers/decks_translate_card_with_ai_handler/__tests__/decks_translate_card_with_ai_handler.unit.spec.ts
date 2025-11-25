@@ -32,7 +32,10 @@ describe('decks_translate_card_with_ai_handler', () => {
       response,
     });
 
-    const result = await handler.execute(params);
+    const result = await handler.execute({
+      user_id: 'user-1',
+      ...params,
+    });
 
     expect(result).toBeDefined();
     expect(result.front).toBe(params.front);
