@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 type MODELS = 'gpt-4.1-mini' | 'gpt-4.1-nano' | 'gpt-5-mini';
 type STATUS = 'success' | 'error';
 
-@Entity({ name: 'ai_requests' })
+@Entity({ name: 'ai_request_logs' })
 export class AiRequestLogEntity {
   @ApiProperty({ description: 'Unique identifier of the AI request' })
   @PrimaryColumn()
