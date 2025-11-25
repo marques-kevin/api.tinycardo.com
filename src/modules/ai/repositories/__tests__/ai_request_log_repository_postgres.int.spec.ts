@@ -19,7 +19,7 @@ describe('AiRequestLogRepositoryPostgres', () => {
         TypeOrmModule.forRoot({
           type: 'postgres',
           host: 'localhost',
-          port: 5430,
+          port: 5432,
           username: 'postgres',
           password: 'postgres',
           database: 'postgres',
