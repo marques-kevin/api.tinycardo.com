@@ -61,6 +61,12 @@ Tinycardo API powers intelligent flashcard learning experiences with spaced repe
    DATABASE_USERNAME=your_username
    DATABASE_PASSWORD=your_password
    JWT_SECRET=your-super-secret-jwt-key
+   LOG_LEVEL=debug
+   SENTRY_DSN=
+   SENTRY_ENVIRONMENT=development
+   SENTRY_TRACES_SAMPLE_RATE=0.1
+   SENTRY_PROFILES_SAMPLE_RATE=0
+   SENTRY_RELEASE=
    ```
 
 4. **Set up the database**
@@ -133,6 +139,11 @@ src/
 | `yarn typecheck`        | Run TypeScript type checking             |
 | `yarn migration:create` | Create new migration                     |
 | `yarn migration:run`    | Run pending migrations                   |
+
+## 📈 Observability
+
+- **Structured Logging**: Requests and background jobs are logged through `pino` via `nestjs-pino`, giving you JSON logs in production and prettified logs during development. Configure verbosity with the `LOG_LEVEL` environment variable, and note that authenticated requests automatically include `user_id` in their log payload.
+- **Error Monitoring**: Sentry is wired up globally. Provide a `SENTRY_DSN` (and optional `SENTRY_ENVIRONMENT`, `SENTRY_TRACES_SAMPLE_RATE`, `SENTRY_PROFILES_SAMPLE_RATE`, `SENTRY_RELEASE`) to begin collecting exceptions and performance traces automatically.
 
 ### Code Style
 
