@@ -47,4 +47,13 @@ export class HealthController {
       uptime: Math.floor(process.uptime()),
     };
   }
+
+  @Get('crash')
+  @ApiOperation({
+    summary: 'Crash test endpoint',
+    description: 'Crashes the API. Used for testing crash reporting.',
+  })
+  crash() {
+    throw new Error('Crash test');
+  }
 }

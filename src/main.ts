@@ -1,11 +1,19 @@
+import '@/instruments/sentry';
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ZodValidationPipe } from 'nestjs-zod';
+import { Logger } from 'nestjs-pino';
+import { GlobalCatchAllExceptionFilter } from '@/modules/global/filters/global_catch_all_exception_filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
 
+  app.useLogger(app.get(Logger));
+  app.useGlobalFilters(new GlobalCatchAllExceptionFilter());
   app.useGlobalPipes(new ZodValidationPipe());
 
   // Swagger configuration

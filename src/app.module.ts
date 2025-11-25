@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { authentication_module } from '@/modules/authentication/authentication_module';
 import { cards_module } from '@/modules/cards/cards_module';
 import { decks_module } from '@/modules/decks/decks_module';
@@ -15,9 +15,67 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bullmq';
 import { GLOBAL_QUEUES_CONSTANTS } from '@/modules/global/constants/global_queues_contants';
 import { global_module } from '@/modules/global/global_module';
+import { LoggerModule } from 'nestjs-pino';
+import { SentryModule } from '@sentry/nestjs/setup';
+
+type RequestWithPossibleUser = {
+  user?: {
+    id?: string | number;
+  };
+  raw?: {
+    user?: {
+      id?: string | number;
+    };
+  };
+};
+
+function extractUserIdFromRequest(req: unknown) {
+  const typed_request = req as RequestWithPossibleUser | undefined;
+  const id = typed_request?.user?.id ?? typed_request?.raw?.user?.id;
+
+  if (id === undefined || id === null) {
+    return undefined;
+  }
+
+  return String(id);
+}
 
 export function get_app_imports() {
+  const is_production = process.env.NODE_ENV === 'production';
+  const log_level = process.env.LOG_LEVEL ?? (is_production ? 'info' : 'debug');
+
   return [
+    SentryModule.forRoot() as DynamicModule,
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: log_level,
+        redact: {
+          paths: [
+            'req.headers.authorization',
+            'req.headers.cookie',
+            'req.body.password',
+            'req.body.token',
+            'req.body.refreshToken',
+            'res.headers["set-cookie"]',
+          ],
+          censor: '[Redacted]',
+        },
+        transport: !is_production
+          ? {
+              target: 'pino-pretty',
+              options: {
+                colorize: true,
+                singleLine: true,
+                translateTime: 'SYS:standard',
+              },
+            }
+          : undefined,
+        customProps: (req) => {
+          const userId = extractUserIdFromRequest(req);
+          return userId ? { user_id: userId } : {};
+        },
+      },
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
