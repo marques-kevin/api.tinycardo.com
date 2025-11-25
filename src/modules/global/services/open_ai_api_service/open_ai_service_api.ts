@@ -8,14 +8,23 @@ import { OpenAiService } from '@/modules/global/services/open_ai_api_service/ope
 export class OpenAiServiceApi extends OpenAiService {
   async generate<T extends z.ZodTypeAny>(
     params: Parameters<OpenAiService['generate']>[0],
-  ): Promise<z.infer<T>> {
-    const { object } = await generateObject({
+  ): Promise<{
+    response: z.infer<T>;
+    usage: { input_tokens: number; output_tokens: number };
+  }> {
+    const { object, usage } = await generateObject({
       model: openai(params.model),
       schema: params.schema,
       system: params.system,
       prompt: params.prompt,
     });
 
-    return object as z.infer<T>;
+    return {
+      response: object as z.infer<T>,
+      usage: {
+        input_tokens: usage.inputTokens ?? 0,
+        output_tokens: usage.outputTokens ?? 0,
+      },
+    };
   }
 }

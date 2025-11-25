@@ -199,6 +199,9 @@ export class DecksController {
     @User() user: UsersEntity,
     @Body() body: DecksTranslateCardWithAiDto,
   ): Promise<DecksTranslateCardWithAiOutputDto> {
-    return this.translate_card_with_ai_handler.execute(body);
+    return this.translate_card_with_ai_handler.execute({
+      user_id: user.id,
+      ...body,
+    });
   }
 }

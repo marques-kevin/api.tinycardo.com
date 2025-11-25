@@ -12,6 +12,7 @@ import { OpenAiServiceApi } from '@/modules/global/services/open_ai_api_service/
 import { OpenAiServiceInMemory } from '@/modules/global/services/open_ai_api_service/open_ai_service_in_memory';
 
 export const global_module = {
+  entities: [],
   services: [
     {
       provide: QueueService,
@@ -30,6 +31,7 @@ export const global_module = {
       useClass: OpenAiServiceApi,
     },
   ],
+  handlers: [],
 };
 
 export const global_module_for_tests = {

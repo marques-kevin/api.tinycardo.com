@@ -2,7 +2,6 @@ import { create_testing_module } from '@/tests/create_testing_module';
 import { DecksGenerateDescriptionHandler } from '@/modules/decks/handlers/decks_generate_description_handler/decks_generate_description_handler';
 import { DecksCreateDeckHandler } from '@/modules/decks/handlers/decks_create_deck_handler/decks_create_deck_handler';
 import { OpenAiServiceInMemory } from '@/modules/global/services/open_ai_api_service/open_ai_service_in_memory';
-import { ForbiddenException } from '@nestjs/common';
 import { OpenAiService } from '@/modules/global/services/open_ai_api_service/open_ai_service';
 
 describe('decks_generate_description_handler', () => {
@@ -21,34 +20,7 @@ describe('decks_generate_description_handler', () => {
     expect(handler).toBeDefined();
   });
 
-  it('should throw ForbiddenException when user is not owner of deck', async () => {
-    const owner_id = 'user-1';
-    const non_owner_id = 'user-2';
-
-    const deck = await create_handler.execute({
-      user_id: owner_id,
-      name: 'Spanish Basics',
-      front_language: 'es',
-      back_language: 'en',
-      visibility: 'private',
-    });
-
-    await expect(
-      handler.execute({
-        user_id: non_owner_id,
-        deck_id: deck.id,
-        name: deck.name,
-        cards: [
-          { front: 'Hola', back: 'Hello' },
-          { front: 'Adiós', back: 'Goodbye' },
-        ],
-        front_language: 'es',
-        back_language: 'en',
-      }),
-    ).rejects.toThrow(ForbiddenException);
-  });
-
-  it.only('should generate description when user is owner of deck', async () => {
+  it('should generate description', async () => {
     const user_id = 'user-1';
 
     const deck = await create_handler.execute({

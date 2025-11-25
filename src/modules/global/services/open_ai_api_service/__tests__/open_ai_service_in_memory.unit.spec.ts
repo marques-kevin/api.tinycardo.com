@@ -36,7 +36,9 @@ describe('open_ai_service_in_memory', () => {
       prompt,
     });
 
-    expect(result).toEqual(expectedResponse);
+    expect(result).toMatchObject({
+      response: expectedResponse,
+    });
   });
 
   it('should throw error when no matching response is found', async () => {
@@ -89,7 +91,7 @@ describe('open_ai_service_in_memory', () => {
       model,
       prompt: prompt1,
     });
-    expect(result1).toEqual({ description: 'Response 1' });
+    expect(result1).toMatchObject({ response: { description: 'Response 1' } });
 
     const result2 = await service.generate({
       schema: schema2,
@@ -97,7 +99,7 @@ describe('open_ai_service_in_memory', () => {
       model,
       prompt: prompt2,
     });
-    expect(result2).toEqual({ title: 'Response 2' });
+    expect(result2).toMatchObject({ response: { title: 'Response 2' } });
   });
 
   it('should not match when system differs', async () => {
@@ -211,6 +213,6 @@ describe('open_ai_service_in_memory', () => {
       prompt,
     });
 
-    expect(result).toEqual(expectedResponse);
+    expect(result).toMatchObject({ response: expectedResponse });
   });
 });

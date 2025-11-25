@@ -7,6 +7,7 @@ import { history_module } from '@/modules/history/history_module';
 import { health_module } from '@/modules/health/health_module';
 import { streak_module } from '@/modules/streak/streak_module';
 import { lessons_module } from '@/modules/lessons/lessons_module';
+import { ai_module } from '@/modules/ai/ai_module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { get_database_config } from '@/config/get_database_config';
@@ -37,22 +38,26 @@ export function get_app_imports() {
       return TypeOrmModule.forRoot({
         ...config,
         entities: [
+          ...global_module.entities,
           ...authentication_module.entities,
           ...cards_module.entities,
           ...decks_module.entities,
           ...history_module.entities,
           ...streak_module.entities,
           ...lessons_module.entities,
+          ...ai_module.entities,
         ],
       });
     }),
     TypeOrmModule.forFeature([
+      ...global_module.entities,
       ...authentication_module.entities,
       ...cards_module.entities,
       ...decks_module.entities,
       ...history_module.entities,
       ...streak_module.entities,
       ...lessons_module.entities,
+      ...ai_module.entities,
     ]),
   ];
 }
@@ -73,6 +78,7 @@ export function get_app_controllers() {
 export function get_app_providers() {
   return [
     ...global_module.services,
+    ...global_module.handlers,
     ...authentication_module.repositories,
     ...authentication_module.services,
     ...authentication_module.handlers,
@@ -88,6 +94,8 @@ export function get_app_providers() {
     ...streak_module.handlers,
     ...lessons_module.repositories,
     ...lessons_module.handlers,
+    ...ai_module.repositories,
+    ...ai_module.handlers,
   ];
 }
 

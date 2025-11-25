@@ -11,6 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { UsersRepositoryInMemory } from '@/modules/authentication/repositories/users_repository_in_memory';
 import { global_module_for_tests } from '@/modules/global/global_module';
+import { ai_module_for_tests } from '@/modules/ai/ai_module';
 
 export async function create_testing_module() {
   const module = await Test.createTestingModule({
@@ -41,6 +42,8 @@ export async function create_testing_module() {
       ...streak_module_for_tests.handlers,
       ...lessons_module_for_tests.repositories,
       ...lessons_module_for_tests.handlers,
+      ...ai_module_for_tests.repositories,
+      ...ai_module_for_tests.handlers,
     ],
   }).compile();
 

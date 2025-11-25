@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { OpenAiService } from '@/modules/global/services/open_ai_api_service/open_ai_service';
 import {
   DecksGenerateDescriptionDto,
   DecksGenerateDescriptionOutputDto,
 } from '@/modules/decks/dtos/decks_generate_description_dto';
 import z from 'zod';
-import { DecksCheckAccessHandler } from '@/modules/decks/handlers/decks_check_access_handler/decks_check_access_handler';
+import { AiRequestHandler } from '@/modules/ai/handlers/ai_request_handler/ai_request_handler';
 
 type Dto = {
   input: WithUserId<DecksGenerateDescriptionDto>;
@@ -16,10 +15,7 @@ type Dto = {
 export class DecksGenerateDescriptionHandler
   implements Handler<Dto['input'], Dto['output']>
 {
-  constructor(
-    private readonly open_ai_service: OpenAiService,
-    private readonly decks_check_access_handler: DecksCheckAccessHandler,
-  ) {}
+  constructor(private readonly global_ai_handler: AiRequestHandler) {}
 
   build_generate_description_schema(params: {
     name: string;
@@ -52,21 +48,14 @@ export class DecksGenerateDescriptionHandler
   }
 
   async execute(params: Dto['input']): Promise<Dto['output']> {
-    // TODO: only premium users
-    // TODO: rate limit
-    // Quota per user
-    await this.decks_check_access_handler.execute({
-      deck_id: params.deck_id,
+    const { description } = await this.global_ai_handler.generate({
+      handler_name: 'DecksGenerateDescriptionHandler',
+      ...this.build_generate_description_schema(params),
       user_id: params.user_id,
-      level: 'owner',
     });
 
-    const { description } = await this.open_ai_service.generate(
-      this.build_generate_description_schema(params),
-    );
-
     return {
-      description: description,
+      description,
     };
   }
 }
