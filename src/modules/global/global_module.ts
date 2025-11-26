@@ -10,10 +10,17 @@ import { TextToSpeechServiceInMemory } from '@/modules/global/services/text_to_s
 import { OpenAiService } from '@/modules/global/services/open_ai_api_service/open_ai_service';
 import { OpenAiServiceApi } from '@/modules/global/services/open_ai_api_service/open_ai_service_api';
 import { OpenAiServiceInMemory } from '@/modules/global/services/open_ai_api_service/open_ai_service_in_memory';
+import { LoggerService } from '@/modules/global/services/logger_service/logger_service';
+import { LoggerServiceOtel } from '@/modules/global/services/logger_service/logger_service_otel';
+import { LoggerServiceConsole } from '@/modules/global/services/logger_service/logger_service_console';
 
 export const global_module = {
   entities: [],
   services: [
+    {
+      provide: LoggerService,
+      useClass: LoggerServiceOtel,
+    },
     {
       provide: QueueService,
       useClass: QueueServiceBullMQ,
@@ -37,6 +44,10 @@ export const global_module = {
 export const global_module_for_tests = {
   ...global_module,
   services: [
+    {
+      provide: LoggerService,
+      useClass: LoggerServiceConsole,
+    },
     {
       provide: QueueService,
       useClass: QueueServiceInMemory,
