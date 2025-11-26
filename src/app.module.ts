@@ -8,77 +8,40 @@ import { health_module } from '@/modules/health/health_module';
 import { streak_module } from '@/modules/streak/streak_module';
 import { lessons_module } from '@/modules/lessons/lessons_module';
 import { ai_module } from '@/modules/ai/ai_module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { get_database_config } from '@/config/get_database_config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bullmq';
 import { GLOBAL_QUEUES_CONSTANTS } from '@/modules/global/constants/global_queues_contants';
 import { global_module } from '@/modules/global/global_module';
-import { LoggerModule } from 'nestjs-pino';
 import { SentryModule } from '@sentry/nestjs/setup';
-
-type RequestWithPossibleUser = {
-  user?: {
-    id?: string | number;
-  };
-  raw?: {
-    user?: {
-      id?: string | number;
-    };
-  };
-};
-
-function extractUserIdFromRequest(req: unknown) {
-  const typed_request = req as RequestWithPossibleUser | undefined;
-  const id = typed_request?.user?.id ?? typed_request?.raw?.user?.id;
-
-  if (id === undefined || id === null) {
-    return undefined;
-  }
-
-  return String(id);
-}
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
+import { CustomThrottlerGuard } from '@/modules/global/guards/custom_throttler_guard';
 
 export function get_app_imports() {
-  const is_production = process.env.NODE_ENV === 'production';
-  const log_level = process.env.LOG_LEVEL ?? (is_production ? 'info' : 'debug');
-
   return [
-    SentryModule.forRoot(),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        level: log_level,
-        redact: {
-          paths: [
-            'req.headers.authorization',
-            'req.headers.cookie',
-            'req.body.password',
-            'req.body.token',
-            'req.body.refreshToken',
-            'res.headers["set-cookie"]',
-          ],
-          censor: '[Redacted]',
-        },
-        transport: !is_production
-          ? {
-              target: 'pino-pretty',
-              options: {
-                colorize: true,
-                singleLine: true,
-                translateTime: 'SYS:standard',
-              },
-            }
-          : undefined,
-        customProps: (req) => {
-          const userId = extractUserIdFromRequest(req);
-          return userId ? { user_id: userId } : {};
-        },
-      },
-    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
+    }),
+    SentryModule.forRoot(),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        throttlers: [
+          {
+            ttl: Number(configService.get('RATE_LIMITER_TTL')),
+            limit: Number(configService.get('RATE_LIMITER_LIMIT')),
+          },
+        ],
+        storage: new ThrottlerStorageRedisService(
+          configService.get('REDIS_URL'),
+        ),
+      }),
+      inject: [ConfigService],
     }),
     JwtModule.register({
       secret: process.env.JWT_SECRET as string,
@@ -86,7 +49,7 @@ export function get_app_imports() {
     }),
     BullModule.forRoot({
       connection: {
-        url: process.env.REDIS_URL!,
+        url: process.env.REDIS_URL,
       },
     }),
     BullModule.registerQueue({
@@ -160,6 +123,12 @@ export function get_app_providers() {
 @Module({
   imports: [...get_app_imports()],
   controllers: [...get_app_controllers()],
-  providers: [...get_app_providers()],
+  providers: [
+    ...get_app_providers(),
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
