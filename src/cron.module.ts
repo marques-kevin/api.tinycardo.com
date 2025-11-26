@@ -10,7 +10,7 @@ import { cron_module } from '@/modules/cron/cron_module';
     ScheduleModule.forRoot(),
     BullModule.forRoot({
       connection: {
-        url: process.env.REDIS_URL!,
+        url: process.env.REDIS_URL,
       },
     }),
   ],

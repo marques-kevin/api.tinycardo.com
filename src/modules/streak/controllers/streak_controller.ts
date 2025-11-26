@@ -15,6 +15,7 @@ import { StreakEntity } from '@/modules/streak/entities/streak_entity';
 
 @ApiTags('Streaks')
 @Controller('/streaks')
+@UseGuards(JwtAuthGuard)
 export class StreakController {
   constructor(
     private readonly get_user_streaks_handler: StreakGetUserStreaksHandler,
@@ -24,7 +25,6 @@ export class StreakController {
   @ApiOperation({ summary: 'Get user streaks' })
   @ApiOkResponse({ type: [StreakEntity] })
   @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @Post('/get_user_streaks')
   async get_user_streaks(@User() user: UsersEntity) {
     return this.get_user_streaks_handler.execute({
@@ -35,7 +35,6 @@ export class StreakController {
   @ApiOperation({ summary: 'Add a streak for the current day' })
   @ApiOkResponse({ type: StreakEntity })
   @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @Post('/add_streak')
   async add_streak(
     @User() user: UsersEntity,

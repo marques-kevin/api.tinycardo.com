@@ -46,6 +46,8 @@ import {
 
 @ApiTags('Decks')
 @Controller('/decks')
+@ApiBearerAuth('JWT-auth')
+@UseGuards(JwtAuthGuard)
 export class DecksController {
   constructor(
     private readonly get_decks_handler: DecksGetDecksHandler,
@@ -63,7 +65,6 @@ export class DecksController {
   @ApiOperation({ summary: 'Get user decks' })
   @ApiOkResponse({ type: [DecksEntityWithStats] })
   @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @Post('/get_decks')
   async get_decks(@User() user: UsersEntity) {
     return this.get_decks_handler.execute({
@@ -73,7 +74,6 @@ export class DecksController {
 
   @ApiOperation({ summary: 'Get a deck by ID' })
   @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: DecksGetDeckByIdOutputDto })
   @Post('/get_deck_by_id')
   async get_deck_by_id(
@@ -89,7 +89,6 @@ export class DecksController {
   @ApiOperation({ summary: 'Search public decks' })
   @ApiOkResponse({ type: DecksSearchDecksOutputDto })
   @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @Post('/search_decks')
   async search_decks(
     @Body() body: DecksSearchDecksDto,
@@ -103,8 +102,6 @@ export class DecksController {
 
   @ApiOperation({ summary: 'Create a new deck' })
   @ApiOkResponse({ type: DecksEntity })
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @Post('/create_deck')
   async create_deck(
     @User() user: UsersEntity,
@@ -118,8 +115,6 @@ export class DecksController {
 
   @ApiOperation({ summary: 'Update a deck' })
   @ApiOkResponse({ type: DecksEntity })
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @Post('/update_deck')
   async update_deck(
     @User() user: UsersEntity,
@@ -133,8 +128,6 @@ export class DecksController {
 
   @ApiOperation({ summary: 'Delete a deck (soft delete)' })
   @ApiOkResponse()
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @Post('/delete_deck')
   async delete_deck(
     @User() user: UsersEntity,
@@ -148,8 +141,6 @@ export class DecksController {
 
   @ApiOperation({ summary: 'Duplicate a deck' })
   @ApiOkResponse({ type: DecksEntity })
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @Post('/duplicate_deck')
   async duplicate_deck(
     @User() user: UsersEntity,
@@ -162,8 +153,6 @@ export class DecksController {
   }
 
   @ApiOperation({ summary: 'Upsert cards in a deck' })
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @Post('/upsert_cards')
   async upsert_cards(
     @User() user: UsersEntity,
@@ -177,8 +166,6 @@ export class DecksController {
 
   @ApiOperation({ summary: 'Generate a deck description using AI' })
   @ApiOkResponse({ type: DecksGenerateDescriptionOutputDto })
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @Post('/generate_description')
   async generate_description(
     @User() user: UsersEntity,
@@ -192,8 +179,6 @@ export class DecksController {
 
   @ApiOperation({ summary: 'Translate a card front text using AI' })
   @ApiOkResponse({ type: DecksTranslateCardWithAiOutputDto })
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
   @Post('/translate_card_with_ai')
   async translate_card_with_ai(
     @User() user: UsersEntity,
