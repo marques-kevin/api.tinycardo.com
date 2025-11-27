@@ -1,3 +1,4 @@
+import '@/instruments/telemetry';
 import '@/instruments/sentry';
 import { NestFactory } from '@nestjs/core';
 import { CronModule } from '@/cron.module';
