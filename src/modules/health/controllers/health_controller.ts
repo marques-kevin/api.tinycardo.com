@@ -1,9 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { LoggerService } from '@/modules/global/services/logger_service/logger_service';
 
 @ApiTags('Health')
 @Controller('/health')
 export class HealthController {
+  constructor(private readonly logger: LoggerService) {}
+
   @Get()
   @ApiOperation({
     summary: 'Health check endpoint',
@@ -40,6 +43,8 @@ export class HealthController {
     },
   })
   getHealth() {
+    this.logger.info('hello');
+
     return {
       status: 'ok',
       message: 'Tinycardo API is running successfully',
