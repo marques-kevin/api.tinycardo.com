@@ -26,30 +26,35 @@ const headers = {
   Authorization: `Bearer ${process.env.BETTER_STACK_TOKEN}`,
 };
 
-const sdk = new NodeSDK({
-  resource,
-  traceExporter: new OTLPTraceExporter({
-    url: `${process.env.BETTER_STACK_ENDPOINT}/v1/traces`,
-    headers,
-    compression: CompressionAlgorithm.GZIP,
-  }),
-  logRecordProcessors: [
-    new SimpleLogRecordProcessor(
-      new OTLPLogExporter({
-        url: `${process.env.BETTER_STACK_ENDPOINT}/v1/logs`,
-        headers,
-        compression: CompressionAlgorithm.GZIP,
-      }),
-    ),
-  ],
-  metricReader: new PeriodicExportingMetricReader({
-    exporter: new OTLPMetricExporter({
-      url: `${process.env.BETTER_STACK_ENDPOINT}/v1/metrics`,
+if (process.env.BETTER_STACK_TOKEN && process.env.BETTER_STACK_ENDPOINT) {
+  const sdk = new NodeSDK({
+    resource,
+    traceExporter: new OTLPTraceExporter({
+      url: `${process.env.BETTER_STACK_ENDPOINT}/v1/traces`,
       headers,
       compression: CompressionAlgorithm.GZIP,
     }),
-  }),
-  instrumentations: [getNodeAutoInstrumentations(), new NestInstrumentation()],
-});
+    logRecordProcessors: [
+      new SimpleLogRecordProcessor(
+        new OTLPLogExporter({
+          url: `${process.env.BETTER_STACK_ENDPOINT}/v1/logs`,
+          headers,
+          compression: CompressionAlgorithm.GZIP,
+        }),
+      ),
+    ],
+    metricReader: new PeriodicExportingMetricReader({
+      exporter: new OTLPMetricExporter({
+        url: `${process.env.BETTER_STACK_ENDPOINT}/v1/metrics`,
+        headers,
+        compression: CompressionAlgorithm.GZIP,
+      }),
+    }),
+    instrumentations: [
+      getNodeAutoInstrumentations(),
+      new NestInstrumentation(),
+    ],
+  });
 
-sdk.start();
+  sdk.start();
+}
