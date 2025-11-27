@@ -1,7 +1,6 @@
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { SimpleLogRecordProcessor } from '@opentelemetry/sdk-logs';
-import { CompressionAlgorithm } from '@opentelemetry/otlp-exporter-base';
 import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-http';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
@@ -13,41 +12,33 @@ import {
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
 
-const resource = defaultResource().merge(
-  resourceFromAttributes({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'tinycardo',
-    [SemanticResourceAttributes.SERVICE_NAMESPACE]: 'api',
-    [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]:
-      process.env.NODE_ENV || 'development',
-  }),
-);
+const EXPORTER_ENDPOINT = process.env.OTEL_EXPORTER_OTLP_ENDPOINT;
 
-const headers = {
-  Authorization: `Bearer ${process.env.BETTER_STACK_TOKEN}`,
-};
+if (EXPORTER_ENDPOINT) {
+  const resource = defaultResource().merge(
+    resourceFromAttributes({
+      [SemanticResourceAttributes.SERVICE_NAME]: 'tinycardo',
+      [SemanticResourceAttributes.SERVICE_NAMESPACE]: 'api',
+      [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]:
+        process.env.NODE_ENV || 'development',
+    }),
+  );
 
-if (process.env.BETTER_STACK_TOKEN && process.env.BETTER_STACK_ENDPOINT) {
   const sdk = new NodeSDK({
     resource,
     traceExporter: new OTLPTraceExporter({
-      url: `${process.env.BETTER_STACK_ENDPOINT}/v1/traces`,
-      headers,
-      compression: CompressionAlgorithm.GZIP,
+      url: `${EXPORTER_ENDPOINT}/v1/traces`,
     }),
     logRecordProcessors: [
       new SimpleLogRecordProcessor(
         new OTLPLogExporter({
-          url: `${process.env.BETTER_STACK_ENDPOINT}/v1/logs`,
-          headers,
-          compression: CompressionAlgorithm.GZIP,
+          url: `${EXPORTER_ENDPOINT}/v1/logs`,
         }),
       ),
     ],
     metricReader: new PeriodicExportingMetricReader({
       exporter: new OTLPMetricExporter({
-        url: `${process.env.BETTER_STACK_ENDPOINT}/v1/metrics`,
-        headers,
-        compression: CompressionAlgorithm.GZIP,
+        url: `${EXPORTER_ENDPOINT}/v1/metrics`,
       }),
     }),
     instrumentations: [
