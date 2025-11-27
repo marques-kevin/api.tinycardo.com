@@ -13,6 +13,9 @@ import { OpenAiServiceInMemory } from '@/modules/global/services/open_ai_api_ser
 import { LoggerService } from '@/modules/global/services/logger_service/logger_service';
 import { LoggerServiceOtel } from '@/modules/global/services/logger_service/logger_service_otel';
 import { LoggerServiceConsole } from '@/modules/global/services/logger_service/logger_service_console';
+import { UptimeService } from '@/modules/global/services/uptime_service/uptime_service';
+import { UptimeServiceBetterstack } from '@/modules/global/services/uptime_service/uptime_service_betterstack';
+import { UptimeServiceInMemory } from '@/modules/global/services/uptime_service/uptime_service_in_memory';
 
 export const global_module = {
   entities: [],
@@ -20,6 +23,10 @@ export const global_module = {
     {
       provide: LoggerService,
       useClass: LoggerServiceOtel,
+    },
+    {
+      provide: UptimeService,
+      useClass: UptimeServiceBetterstack,
     },
     {
       provide: QueueService,
@@ -47,6 +54,10 @@ export const global_module_for_tests = {
     {
       provide: LoggerService,
       useClass: LoggerServiceConsole,
+    },
+    {
+      provide: UptimeService,
+      useClass: UptimeServiceInMemory,
     },
     {
       provide: QueueService,
