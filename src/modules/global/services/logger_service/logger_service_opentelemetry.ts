@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { LogAttributes, SeverityNumber, logs } from '@opentelemetry/api-logs';
-import { LoggerAttributes } from '@/modules/global/services/logger_service/logger_service';
 import { LoggerService } from '@/modules/global/services/logger_service/logger_service';
 
 @Injectable()
 export class LoggerServiceOpenTelemetry extends LoggerService {
   private readonly logger = logs.getLogger('tinycardo-api');
 
-  debug(message: string, attributes?: LoggerAttributes): void {
+  debug(message: string, attributes?: Record<string, any>): void {
     this.emit({
       message,
       attributes,
@@ -16,7 +15,7 @@ export class LoggerServiceOpenTelemetry extends LoggerService {
     });
   }
 
-  info(message: string, attributes?: LoggerAttributes): void {
+  info(message: string, attributes?: Record<string, any>): void {
     this.emit({
       message,
       attributes,
@@ -25,7 +24,7 @@ export class LoggerServiceOpenTelemetry extends LoggerService {
     });
   }
 
-  warn(message: string, attributes?: LoggerAttributes): void {
+  warn(message: string, attributes?: Record<string, any>): void {
     this.emit({
       message,
       attributes,
@@ -34,7 +33,7 @@ export class LoggerServiceOpenTelemetry extends LoggerService {
     });
   }
 
-  error(message: string, attributes?: LoggerAttributes): void {
+  error(message: string, attributes?: Record<string, any>): void {
     this.emit({
       message,
       attributes,
@@ -45,7 +44,7 @@ export class LoggerServiceOpenTelemetry extends LoggerService {
 
   private emit(params: {
     message: string;
-    attributes?: LoggerAttributes;
+    attributes?: Record<string, any>;
     severityNumber: SeverityNumber;
     severityText: string;
   }) {
@@ -60,7 +59,7 @@ export class LoggerServiceOpenTelemetry extends LoggerService {
   }
 
   private formatAttributes(
-    attributes?: LoggerAttributes,
+    attributes?: Record<string, any>,
   ): LogAttributes | undefined {
     if (!attributes) {
       return undefined;
