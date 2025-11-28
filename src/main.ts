@@ -5,12 +5,14 @@ import { AppModule } from '@/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { GlobalCatchAllExceptionFilter } from '@/modules/global/filters/global_catch_all_exception_filter';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.useGlobalFilters(new GlobalCatchAllExceptionFilter());
   app.useGlobalPipes(new ZodValidationPipe());
+  app.useBodyParser('json', { limit: '10mb' });
 
   // Swagger configuration
   const config = new DocumentBuilder()
