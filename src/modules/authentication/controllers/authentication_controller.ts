@@ -1,5 +1,10 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthenticationAuthenticateWithGoogleHandler } from '@/modules/authentication/handlers/authentication_authenticate_with_google_handler/authentication_authenticate_with_google_handler';
 import { AuthenticationDeleteAccountHandler } from '@/modules/authentication/handlers/authentication_delete_account_handler/authentication_delete_account_handler';
 import { AuthenticationGetGoogleAuthenticationUrlHandler } from '@/modules/authentication/handlers/authentication_get_google_authentication_url/authentication_get_google_authentication_url';
@@ -59,5 +64,24 @@ export class AuthenticationController {
     await this.delete_account_handler.execute({
       user_id: user.id,
     });
+  }
+
+  @ApiOperation({ summary: 'Check if authenticated user is premium' })
+  @ApiBearerAuth('JWT-auth')
+  @ApiOkResponse({
+    description: 'User is premium',
+    schema: {
+      type: 'object',
+      properties: {
+        is_premium: { type: 'boolean' },
+      },
+    },
+  })
+  @UseGuards(JwtAuthGuard)
+  @Post('/is_premium')
+  async is_premium() {
+    return {
+      is_premium: false,
+    };
   }
 }
